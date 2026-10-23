@@ -65,7 +65,6 @@
     <p><b style="color:var(--ink)">Paid platforms.</b> Several of these trainers keep deeper libraries behind paid apps: Pure Sweat (Drew Hanlen), Hoop Dynamic (Tyler Relph), Chris Johnson Hoops, Ganon Baker, Phil Handy's app and Dave Love's shooting programs. Everything on this site is free on YouTube, and all videos belong to their creators.</p>
   </div>
 </section>
-<script src="https://www.youtube.com/iframe_api"></script>
 <script src="data.js"></script>
 <script src="videos.js"></script>
 <script>
@@ -105,6 +104,8 @@ function onYouTubeIframeAPIReady(){
     }});
 }
 window.onYouTubeIframeAPIReady=onYouTubeIframeAPIReady;
+// The YouTube API may already be loaded (fast connection or cache): start the player now instead of waiting for its callback.
+if(window.YT&&YT.Player)setTimeout(()=>{if(!player)onYouTubeIframeAPIReady()},0);
 
 let lastLoad=0;
 // Each new video load can bring YouTube ads, so drills from the video already in the player only seek. Drill ends are watched by the timer below.
@@ -236,5 +237,6 @@ const start=(location.hash||"").slice(1);
 show(C.some(c=>c.key===start)?start:"shooting",false);
 syncAuto();
 </script>
+<script src="https://www.youtube.com/iframe_api"></script>
 </body>
 </html>
