@@ -838,6 +838,9 @@ const W=[
 let level="i";
 try{level=localStorage.getItem("psa-level")||"i"}catch(e){}
 const LV={b:["Beginner","Learn the technique. No defender, slow to medium speed, every rep clean."],i:["Intermediate","Game speed. A passive defender, pad or coach's call adds a read."],p:["Pro","Live reps, decisions and fatigue. Compete and keep score."]};
+// Group each course's drills by source video (videos in order of first appearance, drills by time within a video),
+// so a whole course plays with as few video loads, and YouTube ad breaks, as possible.
+C.forEach(c=>{const order=[];c.drills.forEach(d=>{if(!order.includes(d.v))order.push(d.v)});c.drills=order.flatMap(v=>c.drills.filter(d=>d.v===v).sort((a,b)=>a.t-b.t))});
 function esc(s){return String(s).replace(/[&<>"]/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]))}
 
 // ---- Player state ----
