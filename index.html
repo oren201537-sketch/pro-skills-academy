@@ -854,12 +854,12 @@ function onYouTubeIframeAPIReady(){
   }
   const first=nowItem||drillItem(course(),0);
   player=new YT.Player("yt",{width:"100%",height:"100%",videoId:V[first.k].id,
-    playerVars:{playsinline:1,rel:0,start:first.t,end:first.e||undefined},
+    playerVars:{playsinline:1,rel:0,start:first.t},
     events:{
       onReady:()=>{ready=true;if(pending){load(pending,true);pending=null}},
       onStateChange:e=>{
         if(e.data!==0||!auto||!nowItem||nowItem.di==null)return;
-        // YouTube can report "ended" for the previous clip while the next one loads: only advance when this clip really reached its end.
+        // Drills that end at the video's last second finish here; YouTube can also report "ended" for the previous clip while the next one loads.
         if(Date.now()-lastLoad<2500)return;
         let t=0;try{t=player.getCurrentTime()}catch(x){}
         if(nowItem.e&&t<nowItem.e-3)return;
@@ -869,12 +869,22 @@ function onYouTubeIframeAPIReady(){
 window.onYouTubeIframeAPIReady=onYouTubeIframeAPIReady;
 
 let lastLoad=0;
+// Each new video load can bring YouTube ads, so drills from the video already in the player only seek. Drill ends are watched by the timer below.
 function load(it,play){
   lastLoad=Date.now();
-  const o={videoId:V[it.k].id,startSeconds:it.t};
-  if(it.e)o.endSeconds=it.e;
-  try{play?player.loadVideoById(o):player.cueVideoById(o)}catch(e){}
+  const id=V[it.k].id;
+  let cur=null;try{cur=player.getVideoData().video_id}catch(e){}
+  try{
+    if(play&&cur===id){player.seekTo(it.t,true);player.playVideo()}
+    else{const o={videoId:id,startSeconds:it.t};play?player.loadVideoById(o):player.cueVideoById(o)}
+  }catch(e){}
 }
+setInterval(()=>{
+  if(!ready||!nowItem||!nowItem.e)return;
+  let st,t;try{st=player.getPlayerState();t=player.getCurrentTime()}catch(e){return}
+  if(st!==1||Date.now()-lastLoad<1500||t<nowItem.e)return;
+  if(auto&&nowItem.di!=null)step(1,true);else player.pauseVideo();
+},250);
 function playItem(it,play=true){
   nowItem=it;renderNP();markPlaying();
   if(!ready){pending=play?it:null;return}
