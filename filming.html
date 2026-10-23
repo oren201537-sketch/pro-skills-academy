@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pro Skills Academy · תוכנית צילום</title>
+<meta name="description" content="תוכנית צילום לכל 95 התרגילים בשלוש רמות: מה לצלם, איזה ציוד, מאיזו זווית, מה להגיד, ושם הקובץ.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Heebo:wght@400;500;700&family=IBM+Plex+Mono:wght@500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="style.css">
+<style>
+body{font-family:"Heebo",var(--body);margin:0}
+.en{direction:ltr;text-align:left;unicode-bidi:isolate;font-family:var(--body)}
+header.hero{padding-block:22px 16px}
+.back{font-size:13.5px;color:var(--muted);text-decoration:none}
+.back:hover{color:var(--accent)}
+.hero h1{font-family:"Heebo",var(--display);font-weight:700;text-transform:none;font-size:clamp(32px,6vw,48px);letter-spacing:0}
+.progress{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:12px;font-size:14px;color:var(--muted)}
+.progress b{color:var(--ink);font-family:var(--mono);font-weight:500}
+.bar{height:6px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:10px;max-width:520px}
+.bar i{display:block;height:100%;background:var(--accent);width:0}
+.guide{display:grid;gap:8px;padding-block:18px}
+.guide details{background:var(--surface);border:1px solid var(--line);border-radius:10px}
+.guide summary{cursor:pointer;padding:12px 14px;font-weight:700;font-size:16px;list-style:none;display:flex;justify-content:space-between;gap:10px}
+.guide summary::-webkit-details-marker{display:none}
+.guide summary::after{content:"+";color:var(--accent);font-family:var(--mono)}
+.guide details[open] summary::after{content:"−"}
+.guide .gb{padding:0 14px 14px;display:grid;gap:8px;font-size:14.5px;max-width:78ch}
+.guide .gb p{margin:0}
+.guide ul,.guide ol{margin:0;padding-inline-start:20px;display:grid;gap:4px}
+.tl{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;font-size:14px}
+.tl span:nth-child(odd){font-family:var(--mono);color:var(--accent);direction:ltr;text-align:left;white-space:nowrap}
+code,.mono{font-family:var(--mono);font-size:12.5px;direction:ltr;unicode-bidi:isolate}
+h2.sec{font-family:"Heebo",var(--display);font-size:clamp(24px,4.5vw,32px);margin:6px 0 10px}
+.rail{position:static;border:0;background:transparent}
+.rail-inner{padding-block:4px 12px}
+.day{background:var(--court-soft);border-radius:12px;padding:14px 16px;display:grid;gap:8px;margin-bottom:16px;font-size:14.5px}
+.day h3{margin:0;font-size:20px}
+.day .row{display:flex;flex-wrap:wrap;gap:6px 18px}
+.day b{color:var(--court)}
+.chipsline{display:flex;flex-wrap:wrap;gap:6px}
+.need{font-size:12.5px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:2px 9px}
+.drillcard{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:grid;gap:12px;margin-bottom:12px;min-width:0}
+.dhead{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 12px}
+.dnum{font-family:var(--mono);font-size:12px;color:var(--accent)}
+.dtitle{font-family:var(--display);font-size:22px;text-transform:uppercase;letter-spacing:.01em}
+.ref{font-size:13px;margin-inline-start:auto}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:700px){.two{grid-template-columns:1fr}}
+.box h5{margin:0 0 6px;font-size:12px;color:var(--muted);font-weight:500;letter-spacing:.02em}
+.box ul{margin:0;padding-inline-start:18px;display:grid;gap:3px;font-size:14px}
+.box p{margin:0;font-size:14px}
+.levels{display:grid;gap:8px}
+.lvrow{border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:grid;gap:8px;min-width:0}
+.lvrow.done{border-color:var(--accent);background:var(--accent-soft)}
+.lvtop{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px}
+.lvbadge{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;background:var(--ink);color:var(--bg);border-radius:4px;padding:2px 7px;direction:ltr}
+.len{font-size:12.5px;color:var(--muted)}
+.onsite{font-size:12px;font-weight:700;color:var(--accent)}
+.check{margin-inline-start:auto;display:flex;align-items:center;gap:6px;font-size:13.5px;cursor:pointer;user-select:none}
+.check input{width:18px;height:18px;accent-color:var(--accent)}
+.what{font-size:14px}
+.fname{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:12.5px;color:var(--muted)}
+.fname code{background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:3px 7px;overflow-wrap:anywhere}
+.copy{font:500 12px "Heebo",var(--body);border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:6px;padding:3px 9px;cursor:pointer}
+.copy:focus-visible,.check input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+footer{padding-block:24px 40px;color:var(--muted);font-size:13px}
+</style>
+</head>
+<body>
+<header class="hero wrap">
+  <a class="back" href="index.html">→ חזרה לקורסים</a>
+  <div class="eyebrow">Pro Skills Academy · תוכנית צילום</div>
+  <h1>תוכנית הצילום</h1>
+  <p class="lede">כל תרגיל באתר, בשלוש רמות: מה מצלמים, מי ומה צריך במגרש, מאיזו זווית, מה אומרים למצלמה, ואיך לקרוא לקובץ. כשהקליפ מוכן ומחובר לאתר, הוא מתנגן במקום הסרטון מיוטיוב.</p>
+  <div class="progress"><span><b id="pTotal">0</b> קליפים בסך הכול</span><span><b id="pFilmed">0</b> סומנו כמצולמים</span><span><b id="pSite">0</b> כבר באתר</span><span><b>10</b> ימי צילום (יום לכל קורס)</span></div>
+  <div class="bar"><i id="pBar"></i></div>
+</header>
+
+<section class="wrap guide" aria-label="מדריך הפקה">
+  <h2 class="sec">לפני שמתחילים</h2>
+
+  <details open><summary>1. איך עובדים</summary><div class="gb">
+    <ol>
+      <li>יום צילום אחד לכל קורס. בחרו קורס למטה, ותראו כמה קליפים יש בו, כמה זמן זה ייקח ואיזה ציוד להביא.</li>
+      <li>לפני כל תרגיל, צפו בדוגמה המקצועית (הקישור "צפו בדוגמה" בכרטיס) כדי שהשחקן יראה איך זה אמור להיראות.</li>
+      <li>צלמו את שלוש הרמות של אותו תרגיל ברצף, באותו סט-אפ: קודם מתחיל, אחר כך בינוני, ובסוף מקצוען. ככה לא מזיזים ציוד ומצלמה שלוש פעמים.</li>
+      <li>סמנו "צולם" ליד כל קליפ. הסימון נשמר במכשיר הזה בלבד.</li>
+      <li>אחרי עריכה והעלאה, שלחו לי את הקישורים ואני מחבר אותם לאתר (פירוט בסעיף 6).</li>
+    </ol>
+  </div></details>
+
+  <details><summary>2. ציוד</summary><div class="gb">
+    <ul>
+      <li><b>טלפון + חצובה.</b> מצלמה יציבה זה הדבר הכי חשוב. חצובה עם תפס לטלפון בגובה של לפחות 1.5 מטר.</li>
+      <li><b>מיקרופון דש אלחוטי לטלפון.</b> בלעדיו ההסברים באולם נשמעים עם הד ורעש כדורים.</li>
+      <li><b>טלפון שני (רשות)</b> לזווית נוספת, למשל מאחורי הקולע בתרגילי קליעה.</li>
+      <li><b>ציוד מגרש:</b> 3–4 כדורים, קונוסים, כרית מגע (pad) לתרגילי מגע, וגומיית התנגדות לתרגילי צעד ראשון. כל כרטיס תרגיל מפרט מה צריך.</li>
+    </ul>
+  </div></details>
+
+  <details><summary>3. הגדרות מצלמה ומסגור</summary><div class="gb">
+    <ul>
+      <li><b>תמיד לרוחב</b>, אף פעם לא לאורך.</li>
+      <li><b>1080p ב-60 פריימים לשנייה.</b> זה מאפשר הילוך איטי חלק פי 2 בעריכה.</li>
+      <li><b>נעילת פוקוס וחשיפה</b> (לחיצה ארוכה על המסך), כדי שהתמונה לא תקפוץ כשהשחקן זז.</li>
+      <li><b>מצב טיסה</b> בזמן צילום, כדי ששיחה לא תעצור את ההקלטה.</li>
+      <li><b>מסגור:</b> כל הגוף של השחקן, הכדור, והטבעת כשהיא חלק מהתרגיל. המצלמה לא זזה. רקע נקי ככל האפשר.</li>
+      <li>הזווית המומלצת לכל קורס מופיעה בכרטיס יום הצילום.</li>
+    </ul>
+  </div></details>
+
+  <details><summary>4. מבנה כל קליפ (תבנית עריכה)</summary><div class="gb">
+    <p>אותו מבנה לכל 285 הקליפים, כך שהשחקנים יודעים מה לצפות. אורך: 45–90 שניות.</p>
+    <div class="tl">
+      <span>0:00–0:03</span><span>כותרת: שם התרגיל + הרמה (למשל: Floater progression · Beginner).</span>
+      <span>0:03–0:15</span><span>המאמן מסביר מול המצלמה: למה התרגיל, ו-2–3 דגשים מהכרטיס.</span>
+      <span>0:15–0:45</span><span>ביצוע במהירות אמיתית, 2–3 חזרות נקיות.</span>
+      <span>0:45–0:55</span><span>הילוך איטי של הרגע החשוב (השחרור, הצעד, המגע).</span>
+      <span>0:55–1:05</span><span>טעות נפוצה מול ביצוע נכון. הטעות לצילום כתובה בכרטיס.</span>
+      <span>סוף</span><span>כרטיס סיום עם הסטים והחזרות של הרמה (מופיעים בכרטיס תחת "מה מצלמים").</span>
+    </div>
+  </div></details>
+
+  <details><summary>5. עריכה וייצוא</summary><div class="gb">
+    <ul>
+      <li><b>תוכנות חינמיות:</b> CapCut (הכי פשוט, גם בטלפון) או DaVinci Resolve (במחשב).</li>
+      <li><b>ייצוא:</b> MP4, ‏1080p, ‏30 פריימים לשנייה. קליף של דקה יוצא בערך 50–70MB.</li>
+      <li><b>שם הקובץ:</b> בדיוק כמו שכתוב בכרטיס (למשל <code>shooting__floater-progression__b.mp4</code>). יש כפתור "העתק" ליד כל שם.</li>
+      <li>כתוביות עם הדגשים העיקריים עוזרות לשחקנים שצופים בלי קול.</li>
+    </ul>
+  </div></details>
+
+  <details><summary>6. העלאה וחיבור לאתר</summary><div class="gb">
+    <p>יש שלוש דרכים. בכל אחת מהן הסרטונים שלכם יתנגנו באתר במקום הסרטונים מיוטיוב:</p>
+    <ul>
+      <li><b>Bunny Stream (מומלץ):</b> אחסון וידאו זול מאוד, כמה דולרים בחודש לספרייה כזאת, בלי פרסומות. מעלים את הקבצים לספרייה אחת ושולחים לי את כתובת הספרייה.</li>
+      <li><b>Vimeo:</b> בלי פרסומות. לספרייה בגודל כזה צריך חבילה בתשלום.</li>
+      <li><b>ערוץ יוטיוב שלכם:</b> חינם, אבל יוטיוב עלול להציג פרסומות גם על סרטונים שלכם. שולחים לי את הקישורים.</li>
+    </ul>
+    <p>את החיבור לאתר אני עושה: שלחו לי את הקישורים (או את כתובת הספרייה), ואני מוסיף אותם ומעדכן את האתר. ליד כל קליף שכבר מחובר יופיע "באתר ✓".</p>
+  </div></details>
+
+  <details><summary>7. צילום שחקנים ופרסום</summary><div class="gb">
+    <ul>
+      <li>האתר פתוח לכל מי שיש לו את הקישור. קבלו הסכמה מכל שחקן שמופיע בסרטונים לפני שהם עולים לאתר.</li>
+      <li><b>שחקנים מתחת לגיל 18:</b> צריך אישור של הורה לפני פרסום.</li>
+      <li>אם מישהו מבקש להוריד סרטון, אני מוריד אותו מהאתר מיד.</li>
+    </ul>
+  </div></details>
+</section>
+
+<section class="wrap" id="plan" aria-label="תוכנית לפי קורס">
+  <h2 class="sec">תוכנית לפי קורס</h2>
+  <nav class="rail" aria-label="קורסים"><div class="rail-inner"><div class="chips" id="chips" role="tablist"></div></div></nav>
+  <div id="course"></div>
+</section>
+
+<footer class="wrap">השמות, הדגשים והחזרות באנגלית נלקחו מעמודי הקורסים כדי שיתאימו בדיוק למה שמופיע באתר.</footer>
+
+<script src="data.js"></script>
+<script src="videos.js"></script>
+<script>
+// Same drill order as the courses page: grouped by source video.
+C.forEach(c=>{const order=[];c.drills.forEach(d=>{if(!order.includes(d.v))order.push(d.v)});c.drills=order.flatMap(v=>c.drills.filter(d=>d.v===v).sort((a,b)=>a.t-b.t))});
+function esc(s){return String(s).replace(/[&<>"]/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]))}
+
+const LVH={b:["Beginner","מתחיל","45–60 שניות",8],i:["Intermediate","בינוני","45–75 שניות",10],p:["Pro","מקצוען","60–90 שניות",12]};
+const CAM={
+ shooting:"מהצד ב-90°, מצד יד הקליעה, בגובה המותן. זווית שנייה (רשות) מאחורי הקולע, ליישור.",
+ handling:"מלפנים, מצלמה נמוכה בגובה הברך, כל הגוף והכדור בפריים.",
+ finishing:"מפינת קו הבסיס ב-45°, רחב מספיק כדי לראות את הניתור ואת הטבעת.",
+ bump:"מהצד, לאורך קו החדירה, שני השחקנים בפריים לכל אורך המגע.",
+ driving:"גבוה, מראש הקשת או מהיציע, כדי לראות את הזוויות של החדירה.",
+ footwork:"מהצד, נמוך, כפות הרגליים גלויות. זווית שנייה (רשות) מלפנים.",
+ spacing:"רחב וגבוה של כל חצי המגרש: מהיציע או מסולם.",
+ pnr:"גבוה ורחב מאחורי ראש הקשת, כך שרואים את המכדרר, החוסם וההגנה.",
+ defense:"מלפנים, מקו הבסיס, רחב מספיק לשני השחקנים.",
+ post:"מקו הבסיס, נמוך, שני השחקנים בפריים."
+};
+// Suggested people and equipment for one clip, read from that level's dose text.
+function needs(text){
+  const t=text.toLowerCase(),n=["שחקן מדגים"];
+  const add=x=>{if(!n.includes(x))n.push(x)};
+  if(/3-on-3|4-on-4|5-on-0|shell|4 × 2 minutes|first to 7/.test(t))add("קבוצה של 6–8 שחקנים");
+  else if(/2-on-2|2-on-1|3-on-1|2-on-0|two pads/.test(t))add("2–3 שחקנים נוספים");
+  if(/defender|1-on-1|live|closeout|denial|contest|trap|hedge|offense/.test(t)&&!/no defender/.test(t))add("שחקן הגנה");
+  if(/pad|hits?\b|bump|push|contact|body up/.test(t))add("כרית מגע + מחזיק");
+  if(/cone/.test(t))add("קונוסים");
+  if(/chair/.test(t))add("כיסא");
+  if(/band|resistance/.test(t))add("גומיית התנגדות");
+  if(/tennis/.test(t))add("כדור טניס");
+  if(/screen|big|roller|hedg|drop/.test(t))add("חוסם / שחקן גבוה");
+  if(/coach|signal|call/.test(t))add("מאמן שנותן סימן");
+  if(/partner/.test(t))add("שותף");
+  if(/makes|shots|shoot|3s|free throw|floater|finish|layup|pull-up|catch|tips/.test(t))add("מוסר / ריבאונדר");
+  return n;
+}
+let filmed={};try{filmed=JSON.parse(localStorage.getItem("psa-filmed")||"{}")||{}}catch(e){}
+const saveFilmed=()=>{try{localStorage.setItem("psa-filmed",JSON.stringify(filmed))}catch(e){}};
+let current="shooting";
+
+function progress(){
+  let total=0,f=0,s=0;
+  C.forEach(c=>c.drills.forEach(d=>["b","i","p"].forEach(l=>{total++;const id=clipId(c.key,d,l);if(filmed[id])f++;if(myClip(c.key,d,l))s++})));
+  pTotal.textContent=total;pFilmed.textContent=f;pSite.textContent=s;pBar.style.width=(total?Math.round(f/total*100):0)+"%";
+}
+
+const chips=document.getElementById("chips");
+C.forEach(c=>{const b=document.createElement("button");b.className="chip";b.textContent=c.name;b.setAttribute("role","tab");b.dataset.k=c.key;b.onclick=()=>show(c.key);chips.appendChild(b)});
+
+function show(k){
+  const c=C.find(x=>x.key===k)||C[0];current=c.key;
+  chips.querySelectorAll(".chip").forEach(b=>b.setAttribute("aria-selected",b.dataset.k===c.key));
+  const clips=c.drills.length*3;
+  const mins=c.drills.reduce((a,d)=>a+LVH.b[3]+LVH.i[3]+LVH.p[3],0);
+  const allNeeds=[...new Set(c.drills.flatMap(d=>["b","i","p"].flatMap(l=>needs(d.lv[l]))))];
+  let h=`<div class="day"><h3>יום צילום: <span class="en" style="display:inline">${esc(c.name)}</span></h3>
+    <div class="row"><span><b>${clips}</b> קליפים (${c.drills.length} תרגילים × 3 רמות)</span><span>זמן משוער: <b>${Math.floor(mins/60)}:${String(mins%60).padStart(2,"0")}</b> שעות צילום, בלי הפסקות. אפשר לחלק לשני מפגשים.</span></div>
+    <div><b>זווית מצלמה:</b> ${CAM[c.key]||""}</div>
+    <div><b>מה להביא ומי צריך להיות במגרש:</b></div><div class="chipsline">${allNeeds.map(x=>`<span class="need">${esc(x)}</span>`).join("")}</div></div>`;
+  c.drills.forEach((d,i)=>{
+    const e=segEnd(d.v,d.t),ref=url(d.v,d.t);
+    h+=`<article class="drillcard"><div class="dhead"><span class="dnum">תרגיל ${i+1} מתוך ${c.drills.length}</span><span class="dtitle en">${esc(d.n)}</span><a class="ref" href="${ref}" target="_blank" rel="noopener">צפו בדוגמה (${esc(V[d.v].who)}) ←</a></div>
+      <p class="en" style="margin:0;font-size:14px">${esc(d.d)}</p>
+      <div class="two"><div class="box"><h5>מה להגיד למצלמה (דגשים)</h5><ul class="en">${d.c.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>
+      <div class="box"><h5>טעות לצלם ("טעות מול נכון")</h5><p class="en">${esc(d.m[0])}</p>${d.m[1]?`<h5 style="margin-top:8px">טעות נוספת להזכיר</h5><p class="en">${esc(d.m[1])}</p>`:""}</div></div>
+      <div class="levels">`;
+    ["b","i","p"].forEach(l=>{
+      const id=clipId(c.key,d,l),file=clipFile(c.key,d,l),on=!!myClip(c.key,d,l),done=!!filmed[id];
+      h+=`<div class="lvrow${done?" done":""}"><div class="lvtop"><span class="lvbadge">${LVH[l][0]}</span><b>${LVH[l][1]}</b><span class="len">אורך מומלץ: ${LVH[l][2]}</span>${on?`<span class="onsite">באתר ✓</span>`:""}
+        <label class="check"><input type="checkbox" data-id="${esc(id)}"${done?" checked":""}> צולם</label></div>
+        <div class="what"><b>מה מצלמים:</b> <span class="en" style="display:inline">${esc(d.lv[l])}</span></div>
+        <div class="chipsline">${needs(d.lv[l]).map(x=>`<span class="need">${esc(x)}</span>`).join("")}</div>
+        <div class="fname">שם קובץ: <code>${esc(file)}</code><button type="button" class="copy" data-copy="${esc(file)}">העתק</button></div></div>`;
+    });
+    h+=`</div></article>`;
+  });
+  document.getElementById("course").innerHTML=h;
+  try{history.replaceState(null,"","#"+c.key)}catch(e){}
+}
+
+document.getElementById("course").addEventListener("change",e=>{
+  const cb=e.target.closest("input[type=checkbox][data-id]");if(!cb)return;
+  if(cb.checked)filmed[cb.dataset.id]=1;else delete filmed[cb.dataset.id];
+  saveFilmed();cb.closest(".lvrow").classList.toggle("done",cb.checked);progress();
+});
+document.getElementById("course").addEventListener("click",e=>{
+  const b=e.target.closest(".copy");if(!b)return;
+  const txt=b.dataset.copy,done=()=>{b.textContent="הועתק";setTimeout(()=>b.textContent="העתק",1500)};
+  const fallback=()=>{const code=b.previousElementSibling;const r=document.createRange();r.selectNodeContents(code);const s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent="סומן, העתיקו עם Ctrl+C"};
+  try{navigator.clipboard.writeText(txt).then(done,fallback)}catch(x){fallback()}
+});
+
+const start=(location.hash||"").slice(1);
+show(C.some(c=>c.key===start)?start:"shooting");
+progress();
+</script>
+</body>
+</html>
