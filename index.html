@@ -1,0 +1,971 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pro Skills Academy</title>
+<meta name="description" content="Ten individual basketball courses built from full-length sessions by NBA and EuroLeague coaches and trainers. Every drill plays in place, from start to stop, with cues and doses by level.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Mono:wght@500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: sticky course rail on top, one course at a time below; a coach's clipboard, not a magazine. */
+:root{
+  --bg:#F4F5F7; --surface:#FFFFFF; --ink:#141820; --muted:#5B6372; --line:#DCE0E6;
+  --accent:#D4521C; --accent-soft:#FBE7DD; --accent-ink:#FFFFFF; --court:#1E4F8F; --court-soft:#E3ECF8;
+  --display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0E1116; --surface:#161A21; --ink:#E8EBF0; --muted:#9AA2AF; --line:#2A303A;
+  --accent:#F0773A; --accent-soft:#3A2218; --accent-ink:#140B06; --court:#86AEE6; --court-soft:#1A2638; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0E1116; --surface:#161A21; --ink:#E8EBF0; --muted:#9AA2AF; --line:#2A303A;
+  --accent:#F0773A; --accent-soft:#3A2218; --accent-ink:#140B06; --court:#86AEE6; --court-soft:#1A2638; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.55}
+a{color:var(--court)}
+.wrap{max-width:980px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header.hero{padding-block:28px 18px;border-bottom:1px solid var(--line)}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+h1{font-family:var(--display);font-weight:700;font-size:clamp(40px,8vw,64px);line-height:.95;margin:6px 0 10px;letter-spacing:.01em;text-transform:uppercase;text-wrap:balance}
+.lede{max-width:66ch;color:var(--muted);margin:0}
+.facts{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:14px;font-size:13px;color:var(--muted)}
+.facts b{color:var(--ink);font-family:var(--mono);font-weight:500}
+
+.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+.rail-inner{display:flex;flex-direction:column;gap:10px;padding-block:10px}
+.chips{display:flex;gap:6px;overflow-x:auto;scrollbar-width:thin;padding-bottom:2px}
+.chip{flex:0 0 auto;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:600 15px/1 var(--display);letter-spacing:.04em;text-transform:uppercase;padding:9px 12px;border-radius:999px;cursor:pointer}
+.chip[aria-selected="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.chip:focus-visible,.seg button:focus-visible,summary:focus-visible,.btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.levelbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--surface)}
+.seg button{border:0;background:transparent;color:var(--ink);font:500 13px var(--body);padding:7px 12px;cursor:pointer}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+
+main{padding-block:22px 40px}
+.course-head{display:grid;gap:8px;margin-bottom:18px}
+h2{font-family:var(--display);font-weight:700;font-size:clamp(32px,6vw,44px);line-height:1;margin:0;text-transform:uppercase;letter-spacing:.01em}
+.why{max-width:68ch;margin:0}
+.leads{font-size:13px;color:var(--muted)}
+.leads b{color:var(--ink);font-weight:600}
+
+.feature{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;display:grid;gap:12px;margin-bottom:26px}
+.feature .tag{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.feature h3{font-family:var(--display);font-size:26px;line-height:1.05;margin:0;text-transform:uppercase;letter-spacing:.01em}
+.feature .meta{font-size:13px;color:var(--muted)}
+.feature p{margin:0;max-width:70ch}
+.btn{display:inline-flex;align-items:center;gap:8px;text-decoration:none;font:600 14px var(--body);border-radius:8px;padding:9px 14px;background:var(--accent);color:var(--accent-ink);border:1px solid var(--accent);width:fit-content}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+.btn .clock{font-family:var(--mono);font-weight:500}
+.chapters{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:4px 16px;margin:0;padding:0;list-style:none;font-size:13px}
+.chapters a{display:flex;gap:10px;text-decoration:none;color:var(--ink);padding:4px 0;border-bottom:1px dashed var(--line)}
+.chapters a span:first-child{font-family:var(--mono);color:var(--accent);min-width:58px;font-variant-numeric:tabular-nums}
+
+h4.sec{font-family:var(--display);font-size:22px;text-transform:uppercase;letter-spacing:.03em;margin:28px 0 10px;display:flex;align-items:baseline;gap:10px}
+h4.sec small{font-family:var(--body);font-size:13px;text-transform:none;letter-spacing:0;color:var(--muted);font-weight:400}
+
+.drills{display:grid;gap:8px}
+details.drill{background:var(--surface);border:1px solid var(--line);border-radius:10px}
+details.drill[open]{border-color:var(--ink)}
+details.drill summary{list-style:none;cursor:pointer;padding:12px 14px;display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:center}
+details.drill summary::-webkit-details-marker{display:none}
+.dname{font-weight:600;font-size:15.5px}
+.dsrc{grid-column:1;font-size:12.5px;color:var(--muted)}
+.ddose{grid-column:1;font-size:13px;margin-top:4px;padding:5px 8px;border-radius:6px;background:var(--accent-soft);width:fit-content;max-width:100%}
+.ddose b{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;color:var(--accent);margin-right:6px}
+.lvnote{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;border:1px solid var(--accent);background:var(--accent-soft);border-radius:10px;padding:10px 14px;font-size:14px;margin-bottom:18px}
+.lvnote b{font-family:var(--display);font-size:18px;text-transform:uppercase;letter-spacing:.03em;color:var(--accent)}
+.dtime{grid-row:1/4;grid-column:2;font-family:var(--mono);font-size:13px;color:var(--accent);background:var(--accent-soft);padding:4px 8px;border-radius:6px;font-variant-numeric:tabular-nums;text-align:center;white-space:nowrap}
+.dtime small{display:block;font-family:var(--body);font-size:11px;color:var(--muted)}
+.dbody{padding:0 14px 16px;display:grid;gap:14px;min-width:0}
+.dbody p{margin:0;max-width:72ch}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:640px){.cols{grid-template-columns:1fr}}
+.cols h5,.dose h5{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 6px;font-weight:500}
+.cols ul{margin:0;padding-left:18px;display:grid;gap:4px}
+.cols .bad li::marker{color:var(--accent)}
+.dose{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+@media (max-width:640px){.dose{grid-template-columns:1fr}}
+.lv{border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:13.5px;opacity:.55}
+.lv b{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;margin-bottom:2px}
+.lv.on{opacity:1;border-color:var(--accent);background:var(--accent-soft)}
+.links{display:flex;flex-wrap:wrap;gap:8px}
+
+.plan{width:100%;border-collapse:collapse;font-size:14px;background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.plan td{padding:9px 12px;border-top:1px solid var(--line);vertical-align:top}
+.plan tr:first-child td{border-top:0}
+.plan td:first-child{font-family:var(--mono);color:var(--accent);white-space:nowrap;width:1%;font-variant-numeric:tabular-nums}
+.tablewrap{overflow-x:auto}
+
+.more{display:grid;gap:6px;margin:0;padding:0;list-style:none}
+.more li{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px}
+.more a{font-weight:600;text-decoration:none}
+.more span{color:var(--muted);font-size:13px}
+
+section.block{border-top:1px solid var(--line);padding-block:26px}
+section.block h2{font-size:clamp(28px,5vw,36px);margin-bottom:12px}
+.trainers{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.trainer{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:13.5px;min-width:0}
+.trainer h3{font-family:var(--display);font-size:20px;text-transform:uppercase;margin:0 0 2px;letter-spacing:.02em}
+.trainer .role{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--court);margin-bottom:6px}
+.trainer p{margin:0}
+.week{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:8px}
+.day{background:var(--court-soft);border-radius:10px;padding:12px;font-size:13.5px}
+.day b{font-family:var(--display);font-size:18px;text-transform:uppercase;display:block;color:var(--court)}
+.notes{max-width:72ch;display:grid;gap:8px;font-size:14px;color:var(--muted)}
+.notes p{margin:0}
+@media (prefers-reduced-motion:no-preference){details.drill[open] .dbody{animation:fade .18s ease-out}@keyframes fade{from{opacity:.4}to{opacity:1}}}
+body{margin:0;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+header.hero{padding-block:22px 14px}
+header.hero h1{font-size:clamp(36px,7vw,56px)}
+.layout{display:grid;gap:18px;padding-block:16px 8px}
+.side{min-width:0}
+.rail{position:static;border-bottom:0;background:transparent}
+.rail-inner{padding-block:0 12px}
+.stage{display:grid;gap:10px;min-width:0}
+.screen{aspect-ratio:16/9;max-width:100%;background:#000;border-radius:12px;overflow:hidden}
+.screen iframe,#yt{display:block;width:100%;height:100%;border:0}
+.offline{height:100%;display:flex;flex-direction:column;justify-content:center;gap:8px;padding:16px 20px;color:#E8EBF0;font-size:13.5px;line-height:1.45;overflow:auto}
+.offline b{font-family:var(--display);font-size:22px;text-transform:uppercase;letter-spacing:.02em;color:#F0773A}
+.np{display:grid;gap:4px;min-width:0}
+.np .tag{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.np h3{font-family:var(--display);font-size:24px;line-height:1.05;margin:0;text-transform:uppercase;letter-spacing:.01em}
+.np .meta{font-size:13px;color:var(--muted)}
+.np .npdose{font-size:13.5px;padding:6px 9px;border-radius:6px;background:var(--accent-soft);width:fit-content;max-width:100%}
+.np .npdose b{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;color:var(--accent);margin-right:6px}
+.controls{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.ctl{font:600 13.5px var(--body);border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;padding:8px 12px;cursor:pointer}
+.ctl.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.ctl[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.ctl:focus-visible,button.dtime:focus-visible,.chapters button:focus-visible,.linkbtn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.yt-out{font-size:12.5px;color:var(--muted);margin-left:auto}
+.yt-out a{color:var(--muted)}
+@media (min-width:960px){
+  .layout{grid-template-columns:minmax(0,1.08fr) minmax(0,1fr);align-items:start}
+  .stage{position:sticky;top:calc(12px + env(safe-area-inset-top,0px))}
+}
+@media (max-width:959px){
+  .stage{position:sticky;top:env(safe-area-inset-top,0px);z-index:6;background:var(--bg);padding-block:8px 10px;border-bottom:1px solid var(--line)}
+  .np h3{font-size:19px}
+  .np .meta{display:none}
+}
+button.dtime{border:0;cursor:pointer;font:inherit;font-family:var(--mono);font-size:13px}
+button.dtime::before{content:"▶ ";font-size:10px}
+details.drill.playing{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+details.drill.playing .dname::after{content:" · playing";font-family:var(--mono);font-size:11px;color:var(--accent);font-weight:500}
+.chapters button{all:unset;box-sizing:border-box;display:flex;gap:10px;width:100%;cursor:pointer;padding:4px 0;border-bottom:1px dashed var(--line);color:var(--ink)}
+.chapters button span:first-child{font-family:var(--mono);color:var(--accent);min-width:58px;font-variant-numeric:tabular-nums}
+.chapters button:hover span:last-child{text-decoration:underline}
+.linkbtn{all:unset;cursor:pointer;font-weight:600;color:var(--court)}
+.linkbtn:hover{text-decoration:underline}
+button.btn{cursor:pointer;font-family:var(--body)}
+</style>
+</head>
+<body>
+<header class="hero wrap">
+  <div class="eyebrow">Individual development · NBA &amp; EuroLeague level</div>
+  <h1>Pro Skills Academy</h1>
+  <p class="lede">Ten short courses built from full-length sessions by NBA champions, EuroLeague-winning coaches and the trainers who work with today's stars. Every drill plays right here, from its start to its stop, with coaching cues, common mistakes and the dose for a beginner, a developing player or a pro.</p>
+  <div class="facts"><span><b>10</b> courses</span><span><b id="nDrills">0</b> drills</span><span><b id="nVideos">0</b> source videos</span><span><b>B / I / P</b> level for every drill</span></div>
+</header>
+
+<div class="layout wrap">
+  <aside class="stage" aria-label="Player">
+    <div class="screen"><div id="yt"></div></div>
+    <div class="np" id="np"></div>
+    <div class="controls">
+      <button type="button" class="ctl" id="prev">◀ Prev</button>
+      <button type="button" class="ctl primary" id="playCourse">▶ Play whole course</button>
+      <button type="button" class="ctl" id="next">Next ▶</button>
+      <span class="yt-out" id="ytOut"></span>
+    </div>
+  </aside>
+  <div class="side">
+    <nav class="rail" aria-label="Courses">
+      <div class="rail-inner">
+        <div class="chips" id="chips" role="tablist"></div>
+        <div class="levelbar"><span>Coaching level</span>
+          <div class="seg" id="seg">
+            <button type="button" data-l="b">Beginner</button><button type="button" data-l="i">Intermediate</button><button type="button" data-l="p">Pro</button>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <main id="course" aria-live="polite"></main>
+  </div>
+</div>
+
+<section class="block wrap" id="week">
+  <h2>Weekly Blueprint</h2>
+  <p class="why" style="margin-bottom:12px;color:var(--muted)">A five-day split that covers all ten courses. Each day runs 75–90 minutes. Pick one block from each course's session plan, then cut the volume to match the player's level.</p>
+  <div class="week" id="weekGrid"></div>
+</section>
+
+<section class="block wrap" id="trainers">
+  <h2>The Coaches Behind It</h2>
+  <div class="trainers" id="trainerGrid"></div>
+</section>
+
+<section class="block wrap">
+  <h2>How To Use This</h2>
+  <div class="notes">
+    <p><b style="color:var(--ink)">Videos.</b> Tap any orange time chip or "Play drill" button. The drill plays in the player at the top, starts at the right second and stops by itself at the end of the drill. "Play whole course" runs every drill in the course one after another, like one long video for the topic.</p>
+    <p><b style="color:var(--ink)">Timestamps.</b> Drill start and stop times come from each video's chapter markers on YouTube. They can be off by a few seconds. A video marked "full session" without a chapter list has no chapters, so it plays straight through.</p>
+    <p><b style="color:var(--ink)">Cues and doses.</b> Coaching cues, common mistakes and level doses are a written summary that matches what each segment teaches. They are not word-for-word quotes from the coaches. When the video and these notes differ, follow the video.</p>
+    <p><b style="color:var(--ink)">Levels.</b> Beginner means learning the technique with no defender. Intermediate means game speed with a passive defender or a pad. Pro means live reps, decisions and fatigue. Only move a player up a level once they can do the current level cleanly at game speed.</p>
+    <p><b style="color:var(--ink)">Paid platforms.</b> Several of these trainers keep deeper libraries behind paid apps: Pure Sweat (Drew Hanlen), Hoop Dynamic (Tyler Relph), Chris Johnson Hoops, Ganon Baker, Phil Handy's app and Dave Love's shooting programs. Everything on this site is free on YouTube, and all videos belong to their creators.</p>
+  </div>
+</section>
+<script src="https://www.youtube.com/iframe_api"></script>
+<script>
+const V={
+ carlisleShoot:{id:"kxWNw9YDuW0",title:"Shooting",who:"Rick Carlisle",len:"43:13",src:"FIBA Basketball Fundamentals"},
+ itoudis:{id:"F60bfB5AbTE",title:"Guards Individual Practice Shooting Workout",who:"Dimitris Itoudis",len:"58:21",src:"FIBA Basketball Fundamentals"},
+ loveClinic:{id:"a1SN2BwyQ90",title:"How I Isolate Habits and Layer Shooting Drills",who:"Dave Love",len:"48:42",src:"Basketball Immersion clinic"},
+ loveCollege:{id:"VEuCZaybELE",title:"A College Workout with Shooting Coach Dave Love",who:"Dave Love",len:"28:00",src:"Coach Dave Love"},
+ handyTroy:{id:"AxfnmUad7PI",title:"Building a Foundation for Shooting (Troy Brown Jr.)",who:"Phil Handy",len:"15:20",src:"Phil Handy"},
+ handyRui:{id:"DNDSkCzzv6w",title:"Dribble Pull-Ups & Rhythm Shots (Rui Hachimura)",who:"Phil Handy",len:"15:57",src:"Phil Handy"},
+ relphShoot:{id:"ojfiSHYogBo",title:"Inside a Tyler Relph Shooting Workout",who:"Tyler Relph",len:"11:15",src:"Tyler Relph's Hoop Dynamic"},
+ banchero:{id:"imKJ_VzG_10",title:"Paolo Banchero Full NBA Workout",who:"Jordan Lawley",len:"28:05",src:"JLawBball"},
+ kokoGuards:{id:"0bUl4ZtIPL8",title:"Drills for Guards",who:"Igor Kokoškov",len:"1:23:02",src:"FIBA Basketball Fundamentals"},
+ handyHandle:{id:"Dk65Bq24OyQ",title:"Get Your Handle Right (at-home)",who:"Phil Handy",len:"14:42",src:"Phil Handy"},
+ relphHandle:{id:"ek53ViL-_aM",title:"30-Minute Ball Handling Routine",who:"Tyler Relph",len:"29:00",src:"Tyler Relph's Hoop Dynamic"},
+ henare:{id:"DG-F_H5CUyI",title:"Fundamental Individual Offensive Skills",who:"Paul Henare",len:"33:20",src:"FIBA Basketball Fundamentals"},
+ handyTHT:{id:"GHnu1zWY3GQ",title:"Master Your Footwork & Pace (Talen Horton-Tucker)",who:"Phil Handy",len:"22:39",src:"Phil Handy"},
+ ganonFiba:{id:"x2x7Xs4FXzA",title:"Individual Workout",who:"Ganon Baker",len:"1:04:11",src:"FIBA Basketball Fundamentals"},
+ holger:{id:"3ovdCW6_TQU",title:"Are You Sure We Teach the Shooting?",who:"Holger Geschwindner",len:"1:05:31",src:"FIBA Basketball Fundamentals"},
+ handyITfin:{id:"uiq6yY0fzdQ",title:"Add These Finishes to Your Game (Isaiah Thomas)",who:"Phil Handy",len:"15:45",src:"Phil Handy"},
+ nashRim:{id:"Pk9jqirm2t0",title:"How to Score Around the Rim (Steve Nash)",who:"Phil Handy & Steve Nash",len:"9:11",src:"Phil Handy"},
+ hanlenJass:{id:"ue-tN-OIFHk",title:"Drew Hanlen Puts Me Through an NBA Workout",who:"Drew Hanlen",len:"54:21",src:"Tristan Jass"},
+ hamilton:{id:"dW6mtrPcQOs",title:"Conditioning Drills and Skills",who:"Kennedy Hamilton",len:"36:44",src:"FIBA Basketball Fundamentals"},
+ cjClowney:{id:"KaDML_z7Ma0",title:"Noah Clowney Full Big Man Workout",who:"Chris Johnson",len:"26:18",src:"ChrisJohnsonHoops"},
+ handyShield:{id:"5xdChQJPtjo",title:"How to Shield off Defenders",who:"Phil Handy",len:"10:56",src:"Phil Handy"},
+ haliHanlen:{id:"_InoNT4t3lM",title:"Back in the Lab with Drew Hanlen",who:"Drew Hanlen & Tyrese Haliburton",len:"22:14",src:"Tyrese Haliburton"},
+ shivek:{id:"h9IQ4aGcdZE",title:"Developing Young Guards",who:"Arik Shivek",len:"1:03:37",src:"FIBA Basketball Fundamentals"},
+ brinec:{id:"vLiTu6Z01ZM",title:"Power Exercises for the First Step",who:"Tomaž Brinec",len:"50:50",src:"FIBA Basketball Fundamentals"},
+ mosley:{id:"Wfu_iy_EzTg",title:"Individual Offensive Development",who:"Jamahl Mosley & Ryan Saunders",len:"53:03",src:"FIBA Basketball Fundamentals"},
+ juju:{id:"yulszU0qunA",title:"Scoring off the Pick & Roll: Counters (Juju Watkins, Quinn Cook)",who:"Phil Handy",len:"13:27",src:"Phil Handy"},
+ carlisleFoot:{id:"FWc2TFi2a9A",title:"Footwork",who:"Rick Carlisle",len:"40:29",src:"FIBA Basketball Fundamentals"},
+ handyITfoot:{id:"-c1H8w5DYyc",title:"Master Your Footwork and Jump Shot (Isaiah Thomas)",who:"Phil Handy",len:"17:17",src:"Phil Handy"},
+ handyMorris:{id:"MguFFtJDa5s",title:"Footwork, Pick-Ups & Scoring off Screens (Markieff Morris)",who:"Phil Handy",len:"15:06",src:"Phil Handy"},
+ matehaere:{id:"S29pdlcH0wg",title:"Offensive and Defensive Individual Footwork",who:"Brent Matehaere",len:"30:35",src:"FIBA Basketball Fundamentals"},
+ messina:{id:"XwZriAAESf4",title:"Spacing & Timing",who:"Ettore Messina",len:"24:41",src:"FIBA Basketball Fundamentals"},
+ rip:{id:"rgjBPwknyzg",title:"Rip Hamilton Explains Off-Ball Movement",who:"Richard Hamilton",len:"24:05",src:"NBA × Thinking Basketball"},
+ plaza:{id:"obv2YyGv9oU",title:"Using the Off-Ball Screen",who:"Joan Plaza",len:"1:09:20",src:"FIBA Basketball Fundamentals"},
+ handyCatch:{id:"SiA0LjRZdkQ",title:"How to Score off the Catch (Juju Watkins, Chelsea Gray)",who:"Phil Handy",len:"13:26",src:"Phil Handy"},
+ ruiz:{id:"Wh9xP3_o83U",title:"Drills for Shooting, Passing and Spacing",who:"Joaquín Ruiz Lorente",len:"1:00:24",src:"FIBA Basketball Fundamentals"},
+ jezdik:{id:"5sKKaZDbvd8",title:"Read and Respond P&R",who:"Michal Ježdík",len:"1:01:41",src:"FIBA Basketball Fundamentals"},
+ nashPnr:{id:"_TPj__N5P-4",title:"How to Score in the Pick and Roll (Steve Nash)",who:"Phil Handy & Steve Nash",len:"10:02",src:"Phil Handy"},
+ handyFilay:{id:"qo5fV2Wdwrc",title:"Cutbacks & Passing Reads in the Pick and Roll",who:"Phil Handy",len:"12:01",src:"Phil Handy"},
+ mahlalela:{id:"DgEMApKZK70",title:"Individual Development Drills",who:"Jama Mahlalela",len:"32:44",src:"FIBA Basketball Fundamentals"},
+ repesa:{id:"EKNe4eoZ158",title:"Moves for Centers Following Picks",who:"Jasmin Repeša",len:"1:09:13",src:"FIBA Basketball Fundamentals"},
+ frank:{id:"V398QG_gmoE",title:"Pick 'n' Roll Offense",who:"Lawrence Frank",len:"1:12:46",src:"FIBA Basketball Fundamentals"},
+ mcleod:{id:"D4TX7F1cnT4",title:"Individual Defense",who:"Gordon McLeod",len:"1:29:36",src:"FIBA Basketball Fundamentals"},
+ rudez:{id:"zvXhp6YQ_0o",title:"Individual Tactics in Close-Out Situations",who:"Ivan Rudež",len:"46:18",src:"FIBA Basketball Fundamentals"},
+ burke:{id:"4RuYhzwnzDE",title:"Closeout Defense",who:"Dan Burke",len:"28:07",src:"FIBA Basketball Fundamentals"},
+ patrick:{id:"Y4bjiuzrpyg",title:"Individual Defensive Improvement",who:"John Patrick",len:"51:05",src:"FIBA Basketball Fundamentals"},
+ kokoDef:{id:"wpKJpWbGg1M",title:"Set of Drills for Defense",who:"Igor Kokoškov",len:"1:14:33",src:"FIBA Basketball Fundamentals"},
+ orenga:{id:"RKMCM8GbuKI",title:"Big Man Workout",who:"Juan Antonio Orenga",len:"1:13:44",src:"FIBA Basketball Fundamentals"}
+};
+// Chapter start times (seconds) and video length, used to find where each drill ends.
+const CH={
+ carlisleShoot:[[0,104,304,402,730,1000,1224,1733,1852,1941],2593],
+ loveClinic:[[0,128,240,359,445,571,682,842,1000,1173,1280,1413,1593,1709,1863,1980],2922],
+ loveCollege:[[0,84,204,307,379,466,630,737,842,950,1048,1142,1372,1463,1540],1680],
+ handyTroy:[[0,23,88,128,220,303,367,441,519,607,718,801],920],
+ handyRui:[[0,81,177,272,394,504,620,756],957],
+ relphShoot:[[0,137,220,308,378,450,547],675],
+ banchero:[[0,75,234,357,593,809,975,1129,1413,1510],1685],
+ kokoGuards:[[0,96,305,449,569,691,869,1026,1138,1381,1528,1713,1858,2056,2178,2336,2543,2642,2875,3025,3130,3235,3364,3469,3761,3862,4022,4178,4450,4562,4737,4841,4941],4982],
+ handyHandle:[[0,77,212,335,389,471,553,653,697,813],882],
+ relphHandle:[[0,94,212,354,497,724,949,1156,1424,1638],1740],
+ henare:[[0,207,407,581,747,1136,1467,1776],2000],
+ handyTHT:[[0,35,96,210,265,351,431,527,633,719,808,925,1023,1109,1179],1359],
+ holger:[[0,287,473,720,1055,1246,1422,1742,2235,2482,2773,3033,3326],3931],
+ handyITfin:[[0,29,151,231,358,437,516,572,664,781],945],
+ nashRim:[[0,36,131,206,286,395,481],551],
+ hanlenJass:[[0,129,492,805,1073,1390,1773,2015,2431,2652,3104],3261],
+ hamilton:[[0,159,439,761,1034,1376,1774],2204],
+ cjClowney:[[0,36,208,306,383,477,566,663,766,881,1047,1116,1218,1338,1533],1578],
+ handyShield:[[0,77,125,183,242,309,373,466,567],656],
+ haliHanlen:[[0,73,143,224,289,380,450,554,625,665,748,855,927,1055,1133,1205],1334],
+ shivek:[[0,145,317,538,709,963,1144,1310,1555,2112,2364,2792,3210,3555],3817],
+ mosley:[[0,302,550,1054,1583,2241,2744],3183],
+ juju:[[0,20,84,134,206,278,335,417,506,602,675],807],
+ carlisleFoot:[[0,185,511,743,1012,1243,1501,1841,2224],2429],
+ handyITfoot:[[0,93,195,272,350,425,503,580,687,895],1037],
+ handyMorris:[[0,33,164,289,380,512,616,720,818],906],
+ matehaere:[[0,129,328,476,641,818,1043,1295,1519],1835],
+ messina:[[0,252,372,657,963,1305],1481],
+ rip:[[0,64,209,350,517,675,883,1022],1445],
+ plaza:[[0,34,891,1624,2470,2846],4160],
+ handyCatch:[[0,105,170,285,370,506,649],806],
+ ruiz:[[0,136,413,876,1146,1271,1716,1947,2248,2440,2720,2867,3158,3525],3624],
+ jezdik:[[0,46,248,462,611,746,1024,1433,1479,2023,2181,2457,2890,3160,3311,3485,3565],3701],
+ handyFilay:[[0,88,183,267,349,477,629],721],
+ mahlalela:[[0,71,198,389,659,828,1058,1165,1335,1435,1628,1818],1964],
+ repesa:[[0,1449,2596,2663,2811,2928,2953],4153],
+ frank:[[0,1183,2186,3041],4366],
+ mcleod:[[0,122,393,644,1006,1345,1555,1888,2245,2724,3011,3451,3810],5376],
+ rudez:[[0,97,173,262,308,398,444,543,690,736,860,967,1051,1200,1315,1463,1553,1695,1813,1996,2124,2249,2360,2548],2778],
+ burke:[[0,177,427,651,872,1081,1291],1687],
+ patrick:[[0,340,678,871,1509,1991,2436],3065]
+};
+// End of the drill segment = next chapter start after t (null when the video has no chapters).
+const segEnd=(k,t)=>{const c=CH[k];if(!c)return null;const n=c[0].find(x=>x>t+5);return n||c[1]};
+const mins=s=>s<90?`${s} sec`:`${Math.round(s/60)} min`;
+const fmt=s=>{const h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=String(s%60).padStart(2,"0");return h?`${h}:${String(m).padStart(2,"0")}:${x}`:`${m}:${x}`};
+const url=(k,t)=>`https://www.youtube.com/watch?v=${V[k].id}${t?`&t=${t}s`:""}`;
+
+const C=[
+{key:"shooting",name:"Shooting",
+ why:"Pro shooting is the same release from every entry: off the catch, off the dribble, off movement. This course builds the shot from the hand up (Carlisle), then adds the footwork and pick-ups NBA coaches drill daily (Handy, Love, Relph).",
+ leads:"Rick Carlisle (NBA champion head coach) · Phil Handy · Dave Love · Tyler Relph · Dimitris Itoudis (EuroLeague champion)",
+ feature:{v:"carlisleShoot",note:"A full clinic with demo players. Carlisle builds the shot in order: form, rhythm, power from the legs, hand placement, feet, set point, then movement shooting off flare screens.",
+  ch:[[0,"Introduction and form"],[104,"Importance of rhythm"],[304,"Power without jumping"],[402,"Hand placement"],[730,"Eliminating square feet"],[1000,"High set point and control"],[1224,"Elbow-to-elbow drill"],[1733,"Flare screen shooting"],[1852,"Summary of key mechanics"],[1941,"Player demonstration"]]},
+ drills:[
+  {n:"One-hand form & rhythm",v:"carlisleShoot",t:0,also:[["carlisleShoot",104]],d:"Close-range, one-hand shots to groove the release, then the same motion with rhythm so the shot is one continuous movement.",
+   c:["Ball on the finger pads, with a gap under the palm","Elbow under the ball, wrist loaded back","Hold the follow-through until the ball hits the rim","Dip and rise in one count, with no pause at the top"],
+   m:["Guide hand pushes the ball (side spin)","Moving back before 3 swishes in a row"],
+   lv:{b:"3 spots × 10 makes from 1–2 m, one hand",i:"5 spots × 10 makes, one hand then two hands, step back 1 m each round",p:"50 makes, move back only after 3 swishes in a row; finish at the 3-point line"}},
+  {n:"Power from the legs",v:"carlisleShoot",t:304,d:"Carlisle shows how to generate range from the legs and timing instead of jumping higher or pushing with the arms.",
+   c:["Bend the knees on the catch, not after it","Legs and arms rise together","Land where you took off, or slightly forward"],
+   m:["Arms do all the work at long range","Kicking the legs or drifting sideways"],
+   lv:{b:"10 shots each at mid-range, elbow and 3-point line, form only",i:"Ladder: 2 makes at each 1 m step from 3 m to the 3-point line",p:"10 deep 3s per spot, keeping the same release as your mid-range shot"}},
+  {n:"Hand placement & high set point",v:"carlisleShoot",t:402,also:[["carlisleShoot",1000]],d:"Placing the shooting and guide hands, then a consistent, high set point the defender can't reach.",
+   c:["Thumbs relaxed, guide hand on the side","Set point above the forehead and in line with the shooting eye","Same set point on every shot type"],
+   m:["Thumb flick from the guide hand","Ball drops behind the head (slow release)"],
+   lv:{b:"Wall release: 3 × 20 reps",i:"Catch, set point, shoot: 5 spots × 8 makes",p:"Shoot over a raised hand or pad: 40 contested reps"}},
+  {n:"Foot alignment",v:"carlisleShoot",t:730,d:"Getting off flat, square feet into a balanced stance lined up with the shooting side.",
+   c:["Feet under the hips, slightly staggered","Toes aim at the rim, shooting foot a touch ahead","Weight on the balls of the feet"],
+   m:["Wide stance that kills the lift","Feet change from shot to shot"],
+   lv:{b:"Catch from a toss, freeze the stance, then shoot: 30 reps",i:"1-2 step and hop step, 5 spots × 6",p:"Same footwork after a sprint, on 25 reps at game speed"}},
+  {n:"Elbow-to-elbow movement shooting",v:"carlisleShoot",t:1224,d:"Sprint elbow to elbow, catch and shoot. The first test of the shot while moving.",
+   c:["Square up in the air, or with an inside-foot pivot","Show your hands before the catch","Hips down before the ball arrives"],
+   m:["Fading on the shot","Catching upright, then dipping (slow)"],
+   lv:{b:"2 × 1 minute, count makes",i:"3 × 1 minute, target 12+ makes",p:"Make 10 in a row, or restart after a free throw"}},
+  {n:"Flare screen shooting",v:"carlisleShoot",t:1733,d:"Using a flare screen to get a catch-and-shoot 3 while moving away from the ball.",
+   c:["Set the defender up before the flare","Drift wide and get your feet set on the catch","Shoot on the way up, never on the way down"],
+   m:["Flaring flat and too close","Rushing before the feet land"],
+   lv:{b:"Walk-through with a chair as the screen: 20 reps",i:"Game speed with a passer: 4 × 8",p:"Read the chaser: flare 3, or curl and pull up, against a live defender"}},
+  {n:"Catch & shoot footwork, dribble handoffs",v:"handyTroy",t:519,also:[["handyTroy",718]],d:"Phil Handy's catch-and-shoot details with Troy Brown Jr., then shooting out of dribble handoffs.",
+   c:["Feet ready before the ball arrives","Inside-foot pivot when coming toward the passer","Hug the handoff and turn the corner tight"],
+   m:["Catching flat-footed","Wide arc around the handoff"],
+   lv:{b:"Static catch: 5 spots × 6",i:"Movement catch both directions: 5 × 8",p:"Handoff into a 3 or a one-dribble pull-up, decided by the defender"}},
+  {n:"Pick-ups & rhythm off the dribble",v:"handyRui",t:177,also:[["handyRui",272],["handyRui",394]],d:"With Rui Hachimura: picking the ball up in rhythm off one or two dribbles, then hesitation into the pull-up.",
+   c:["Pick the ball up on the outside hip, away from the defender","Last dribble hard and low","Stop on a 1-2 or a hop, depending on speed"],
+   m:["Floating on the pull-up","Extra dribble before the pick-up"],
+   lv:{b:"1-dribble pull-up each way: 2 × 10",i:"Hesitation into a 2-dribble pull-up, 3 spots × 8",p:"Pull-ups off a live closeout: 30 reps, 60% target"}},
+  {n:"Habit isolation & layering",v:"loveClinic",t:359,also:[["loveClinic",571],["loveCollege",466],["loveCollege",842]],d:"Dave Love's method: isolate one habit, then add layers (movement, catch, dribble, defender) without losing it. The college workout shows it live: fast ABC drills, then pound-dribble into the shot.",
+   c:["Train one habit per block","Add only one layer at a time","Make every rep look like a game rep"],
+   m:["Changing three things at once","Endless static form shooting"],
+   lv:{b:"One habit, 3 layers, 15 reps each",i:"One habit, 5 layers, 20 reps each",p:"Habit under fatigue: layer 5 is a live defender"}},
+  {n:"Exits, fades & sprint off screens",v:"relphShoot",t:378,also:[["relphShoot",450],["relphShoot",547]],d:"Tyler Relph's shot-maker details: exit and fade variations, sprinting off screens and reading timing.",
+   c:["Sprint into the catch and slow down only at the last step","Fade with the shoulders level","Read the defender's top foot"],
+   m:["Jogging off screens","Over-fading on open shots"],
+   lv:{b:"Exit shot: 2 × 10 each side",i:"Fades off movement: 3 × 8",p:"Continuous screen sprints: 2 minutes, target 15+ makes"}}
+ ],
+ plan:[["0–8","Form: one-hand shots and the wall release"],["8–18","Power & foot alignment ladder"],["18–30","Catch-and-shoot movement: elbow to elbow, flares"],["30–42","Off the dribble: pick-ups, hesitation, pull-ups"],["42–52","Layered habit block (Love)"],["52–60","Pressure finish: 10 free throws, 5 in a row from the spot you miss most"]],
+ more:[["itoudis","Full EuroLeague-champion shooting session for guards (no chapters, watch straight through)"],["banchero",234,"Jordan Lawley: shooting cadence, fatigue shooting and free-throw focus with Paolo Banchero"]]
+},
+{key:"handling",name:"Ball Handling",
+ why:"At the top level, handling is for balance, change of pace and reading the defender, not for show. Kokoškov's guard session builds the base, Handy and Relph give the daily reps, and Henare adds partner pressure.",
+ leads:"Igor Kokoškov (EuroBasket gold coach, NBA head coach) · Phil Handy · Tyler Relph · Paul Henare",
+ feature:{v:"kokoGuards",note:"An 83-minute guard session from a coach who took Slovenia to EuroBasket gold. It starts with balance, then moves through separation, counters and finishing combinations. The chapters below cover the handling sections. The finishing chapters are used in the Finishing course.",
+  ch:[[96,"Pre-practice balance routine"],[305,"Shot separation techniques"],[1026,"Hesitation and reading defense"],[1139,"Advanced ball handling counters"],[1714,"Passing and ball control"],[1858,"Team ball handling drills"],[2056,"Core stability and pressure"],[2178,"Advanced dribbling sequences"],[2337,"Stationary body fakes"]]},
+ drills:[
+  {n:"Balance routine",v:"kokoGuards",t:96,d:"Kokoškov's pre-practice balance work. Every move starts and ends in a balanced stance.",
+   c:["Nose over the toes, chest up","Stance just outside shoulder width","Finish every move in the same stance you started in"],
+   m:["Bending at the waist instead of the knees","Feet too narrow on changes of direction"],
+   lv:{b:"5 minutes, every practice",i:"Add a ball and eyes up",p:"Add contact from a pad on every change"}},
+  {n:"Pound ladder series",v:"handyHandle",t:77,also:[["handyHandle",212],["handyHandle",389],["handyHandle",553]],d:"Phil Handy's at-home series: pound cross, one-hand cross, pound between the legs, figure eight and chops. No hoop needed.",
+   c:["Pound hard, waist-high or lower","Keep the off arm up as a shield","Eyes up the whole time"],
+   m:["Soft dribbles that float","Looking at the ball"],
+   lv:{b:"30 seconds per move, both hands",i:"45 seconds per move, add a tennis-ball toss",p:"60 seconds per move with no mistakes, or restart"}},
+  {n:"Stationary & partner pressure",v:"henare",t:207,also:[["henare",407]],d:"Paul Henare's stationary base, then partner drills where a teammate reaches, slaps and crowds the ball.",
+   c:["Protect with the body, not just the hand","Change hands away from the reach","Stay low when a partner bumps you"],
+   m:["Standing up under pressure","Turning your back fully (no vision)"],
+   lv:{b:"Light reach, 3 × 30 seconds",i:"Active hands and bumps, 4 × 30 seconds",p:"Partner fouls on purpose: 5 × 30 seconds, no turnovers"}},
+  {n:"Singles to combos",v:"relphHandle",t:94,also:[["relphHandle",212],["relphHandle",354],["relphHandle",497]],d:"Tyler Relph's progression: single moves (through the legs, behind the back), then combinations.",
+   c:["Master each single before combining","Each move travels forward, not just side to side","Sell the move with the head and shoulders"],
+   m:["Combos with no purpose","Moves that drift backwards"],
+   lv:{b:"3 singles × 10 each way",i:"2-move combos, 8 reps each",p:"3-move combos into a finish or pull-up"}},
+  {n:"Split, speed stop & inverted drop",v:"relphHandle",t:724,also:[["relphHandle",949],["relphHandle",1156]],d:"Splitting gaps, stopping on a dime and the inverted-drop combo.",
+   c:["Stop with the inside foot first","Lower the hips to stop, don't lean back","Explode out of the drop"],
+   m:["Sliding through the stop (a travel risk)","Upright after the split"],
+   lv:{b:"Walk-through, 10 reps each",i:"Game speed through cones, 3 × 6",p:"Through two live defenders (split)"}},
+  {n:"Shift & speed",v:"handyTHT",t:96,also:[["handyTHT",210]],d:"Change of pace with Talen Horton-Tucker: shifts, speed bursts and double between-the-legs combos.",
+   c:["Slow, then fast. Pace beats speed","Push the ball out on the burst","Keep the shoulders low through the shift"],
+   m:["One speed all the time","Dribble too high on the burst"],
+   lv:{b:"Shift and go, half court: 3 × 4",i:"Full court with 2 pace changes",p:"Shift on a defender's reach, live 1-on-1 from the wing"}},
+  {n:"Hesitation & reading the defender",v:"kokoGuards",t:1026,also:[["kokoGuards",1139]],d:"Using the hesitation to read the defender's feet, then counters when the first move is taken away.",
+   c:["Hesitate with the eyes and shoulders","Read the defender's top foot","Have a counter ready for each move"],
+   m:["Hesitating with no change of speed","Ignoring what the defense gives"],
+   lv:{b:"Hesitation and go, 10 reps each way",i:"Coach points a direction mid-move: 3 × 8",p:"Live 1-on-1 with three dribbles max"}},
+  {n:"Core stability under pressure",v:"kokoGuards",t:2056,d:"Dribbling while absorbing pressure and contact, keeping the core strong.",
+   c:["Brace the core before contact","Ball on the far side","Short, strong dribbles"],
+   m:["Losing posture on a bump","Exposing the ball on contact"],
+   lv:{b:"Light pad pushes",i:"Pad hits on every dribble",p:"Full-court pressure with bumps"}},
+  {n:"Dribble competition finisher",v:"relphHandle",t:1424,also:[["relphHandle",1638]],d:"Ends the session with a competitive dribble game and rapid-fire crossovers.",
+   c:["Compete without losing technique","Attack the other player's ball while protecting your own"],
+   m:["Sloppy fundamentals when tired"],
+   lv:{b:"2 rounds",i:"4 rounds",p:"6 rounds + 60 seconds of rapid crossovers"}}
+ ],
+ plan:[["0–5","Balance routine"],["5–17","Pound ladder (stationary)"],["17–27","Partner pressure"],["27–40","Singles to combos + shift and speed"],["40–50","Hesitation reads, split and stop"],["50–60","Core-stability pressure + competition"]],
+ more:[["ganonFiba","Ganon Baker's full FIBA individual workout (no chapters, watch straight through)"],["kokoGuards",2178,"Kokoškov: advanced dribbling sequences and stationary body fakes"]]
+},
+{key:"finishing",name:"Finishing",
+ why:"NBA and EuroLeague guards finish with angles, timing and touch, not just athleticism. This course goes from wrist action and soft touch (the coach who built Dirk Nowitzki) to the floater and Euro step packages Phil Handy runs with Isaiah Thomas and Steve Nash.",
+ leads:"Holger Geschwindner (Dirk Nowitzki's mentor) · Phil Handy with Steve Nash & Isaiah Thomas · Igor Kokoškov · Drew Hanlen",
+ feature:{v:"holger",note:"Despite the title, most of this session is about the finish: layup fundamentals, wrist action, protecting the ball on the drive and soft touch, and it ends with jump-shot mechanics.",
+  ch:[[0,"Layup fundamentals"],[287,"Mastering wrist action"],[473,"Elbow aiming technique"],[720,"Driving and protection"],[1055,"Advanced layup drills"],[1246,"Finishing at the rim"],[1422,"One-on-one demonstration"],[1742,"Ball handling and moves"],[2235,"Soft touch finishing"],[2482,"Underhand to overhand"],[2773,"Fake drive finishing"],[3033,"Jump shot mechanics"]]},
+ drills:[
+  {n:"Layup base & wrist action",v:"holger",t:0,also:[["holger",287],["holger",473]],d:"Geschwindner's fundamentals: takeoff, carrying the ball high, wrist action and aiming with the elbow.",
+   c:["Carry the ball high and away from the defender","Finish with the wrist, not the arm","Point the elbow at the target"],
+   m:["Ball swings down low","Throwing the ball at the glass"],
+   lv:{b:"Mikan series: 3 × 30 seconds",i:"Both hands, both sides, off 1 and 2 feet",p:"Mikan series with a pad bump on each rep"}},
+  {n:"Soft touch: underhand to overhand",v:"holger",t:2235,also:[["holger",2482]],d:"Building soft touch, then switching between underhand and overhand finishes depending on the shot blocker.",
+   c:["High-arching underhand when the defender is behind you","Overhand when they're in front","Let the ball roll off the fingertips"],
+   m:["One finish for every situation","Too much power, ball bangs off the glass"],
+   lv:{b:"10 each hand, each style",i:"Coach calls the style late: 3 × 10",p:"Live help defender decides the style"}},
+  {n:"Floater progression",v:"handyITfin",t:29,also:[["handyITfin",151],["handyITfin",231]],d:"Phil Handy with Isaiah Thomas: floater technique, harder variations, then the pro hop floater.",
+   c:["Release at the top of the jump","Push up, not out","Two-foot hop floater for balance"],
+   m:["Floater from too far (beyond about 4 m)","Leaning into the defender"],
+   lv:{b:"Standing floaters, 2 × 15",i:"1–2 dribble floaters off both feet",p:"Hop floater against a closing big (pad)"}},
+  {n:"One-dribble floaters & overhand finishes",v:"nashRim",t:36,also:[["nashRim",131],["nashRim",206]],d:"Steve Nash's craft: one-dribble floaters, overhand finishes and longer finishes in the lane.",
+   c:["Finish early, before the help arrives","Use the off hand to protect, not push","Hit the glass at the right angle"],
+   m:["Getting all the way to the rim into the shot blocker"],
+   lv:{b:"10 each side",i:"From the wing and the top: 4 × 8",p:"Off a ball-screen look with a trailing defender"}},
+  {n:"High finishes over length",v:"hanlenJass",t:129,also:[["hanlenJass",492],["hanlenJass",805]],d:"Drew Hanlen's finishing warm-up, high-finish series and advanced finishing moves from a full NBA-style workout.",
+   c:["Take off and finish as high as possible","Use the glass as a shield","Extend away from the shot blocker"],
+   m:["Finishing at shoulder height","Rushing the finish"],
+   lv:{b:"10 each hand",i:"High glass finishes off 2 dribbles: 3 × 8",p:"With a long arm or pad contesting"}},
+  {n:"Euro step",v:"handyITfin",t:572,also:[["nashRim",395]],d:"The Euro step broken down by Phil Handy with Isaiah Thomas, then with Steve Nash.",
+   c:["First step sells the line","Second step crosses wide and away from the defender","Carry the ball high and away"],
+   m:["Short second step","Ball exposed on the cross"],
+   lv:{b:"Walk-through 10 each way",i:"Game speed off a dribble attack",p:"Read the help: Euro or go straight up"}},
+  {n:"Layered finishing & runners",v:"kokoGuards",t:3469,also:[["kokoGuards",3762],["kokoGuards",3863]],d:"Kokoškov's layered finishing, runners and guard finishing combinations at EuroLeague tempo.",
+   c:["One-foot runner in rhythm","Change angles late","Finish with both hands"],
+   m:["Same finish every time","Drifting under the rim"],
+   lv:{b:"Runner 2 × 10",i:"Combinations of 3 finishes per drive",p:"Combinations against a 2-man chase"}},
+  {n:"Glass shooting",v:"kokoGuards",t:4023,d:"Using the glass from short angles. A lost skill in modern play.",
+   c:["Aim at the top corner of the box","Soft touch, high arc","Use it from 30–60° angles only"],
+   m:["Using the glass from straight on","Shooting hard into the glass"],
+   lv:{b:"10 makes each side from 2 m",i:"Off 1 dribble from the short corner: 3 × 8",p:"Off a curl, 20 reps, target 15 makes"}},
+  {n:"Fake drive finishing",v:"holger",t:2773,d:"Fake drives and shot fakes to clear the shot blocker before finishing.",
+   c:["The fake must look like a real shot or drive","Stay low on the fake","Finish on the defender's way down"],
+   m:["Fake too slow","Rising up on the fake"],
+   lv:{b:"Ball fake into a power finish: 10 each side",i:"Fake, then a pivot finish: 3 × 8",p:"Against a live shot blocker: 10 possessions"}}
+ ],
+ plan:[["0–8","Mikan and wrist action"],["8–18","Soft touch: underhand / overhand"],["18–30","Floater progression"],["30–40","Euro step & high finishes"],["40–52","Layered finishing combinations"],["52–60","Competition: 10 finishes per player, 1 point each, 2 for the off hand"]],
+ more:[["nashRim",286,"Steve Nash: squeezing through defenders"],["handyITfin",781,"Isaiah Thomas: paint separation drills"]]
+},
+{key:"bump",name:"Bump (Contact)",
+ why:"The bump finish (initiate contact, absorb it, rebalance, then finish) is what separates pro guards like Jalen Brunson. You train it with pads and progressive contact. Kennedy Hamilton's FIBA session and Chris Johnson's NBA big-man session are built around exactly this.",
+ leads:"Kennedy Hamilton (FIBA clinic) · Chris Johnson (NBA trainer) · Drew Hanlen · Phil Handy",
+ feature:{v:"hamilton",note:"A FIBA session that combines conditioning with contact. Players learn to stay strong and in control through bumps on the dribble, the drive and the finish.",
+  ch:[[0,"Introduction and theme"],[159,"Ball handling drills"],[439,"Contact resistance training"],[761,"Driving through contact"],[1034,"Finishing under pressure"],[1376,"Post moves and conditioning"],[1774,"Advanced conditioning finale"]]},
+ drills:[
+  {n:"Contact resistance",v:"hamilton",t:439,d:"Get used to contact with a pad or a partner. Stay strong in the middle of the body while the ball keeps moving.",
+   c:["Brace before the hit","Low center of gravity","Keep dribbling through the contact"],
+   m:["Avoiding the contact","Upright body that absorbs nothing"],
+   lv:{b:"Light pad, 3 × 20 seconds",i:"Medium hits, 4 × 20 seconds",p:"Hard hits from both sides, 5 × 20 seconds"}},
+  {n:"Inside-hand / shoulder bump",v:"cjClowney",t:36,d:"Chris Johnson with Noah Clowney: bumping with the inside hand and shoulder to create space.",
+   c:["Initiate the contact yourself","Shoulder into the chest, not the arm","Hit and push off to create space"],
+   m:["Pushing with the hand (offensive foul)","Leaning forward too early"],
+   lv:{b:"Walk-through with a pad, 10 each side",i:"Game speed off 1 dribble",p:"Against a live defender"}},
+  {n:"Pressing through the defender",v:"cjClowney",t:383,also:[["cjClowney",306]],d:"Purposeful, physical drives that keep going through the defender's body.",
+   c:["Drive with a clear purpose: rim first","Keep your path, don't drift away from the body","Hips lower than the defender's at contact","Keep the legs moving after the hit"],
+   m:["Giving up the line on contact","Stopping the feet when you get hit"],
+   lv:{b:"Walk-through into a held pad: 2 × 8 each side",i:"Game speed into a moving pad: 3 × 8",p:"Live 1-on-1 from the wing, defender allowed to body up: 10 possessions"}},
+  {n:"Own the driving line",v:"cjClowney",t:663,also:[["cjClowney",766]],d:"Holding the driving line. When contact comes, you don't give up the angle.",
+   c:["Get your shoulder past the defender's hip","Chest to the rim","Stay on the line, legally (no off-arm push)","Ball on the outside hand, away from the hit"],
+   m:["Drifting toward the baseline under pressure","Extending the off arm (offensive foul)"],
+   lv:{b:"Cone lane 1 m wide, 10 drives each side",i:"Same lane with a pad hitting at the hip: 3 × 6",p:"Live with an on-ball defender and a help defender in the dunker spot"}},
+  {n:"Driving through contact",v:"hamilton",t:761,d:"Driving and finishing through a hit. The core of the bump.",
+   c:["Bump, absorb, rebalance, finish","Ball high and away from the hit","Finish with both hands when you can"],
+   m:["Ball exposed","Off balance after the bump"],
+   lv:{b:"Bump-then-layup, slow",i:"Game speed with a pad",p:"Live with a defender and a second pad"}},
+  {n:"Finishing under pressure",v:"hamilton",t:1034,d:"Finishing at the rim while taking contact.",
+   c:["Eyes on the target through the contact","Finish with strength, two hands when you can","Expect contact on every rep","Make the and-one, don't sell the foul"],
+   m:["Looking for the foul instead of the basket","Throwing the ball up after the hit"],
+   lv:{b:"Light pad at the finish: 2 × 10",i:"Heavy pad from either side, random: 3 × 8",p:"Two pads (on-ball and help), 20 reps, target 14 makes"}},
+  {n:"Ball protection & rip-throughs",v:"handyShield",t:77,also:[["handyShield",373],["handyShield",466]],d:"Phil Handy: shielding the ball from defenders, aggressive rip-throughs and handling pressure.",
+   c:["Body between the defender and the ball","Rip low and fast, below the knees","Arm bar for protection, not a push","Attack the defender's hip after the rip"],
+   m:["Ball exposed in front of the body","Rip high across the face (slow, easy to strip)"],
+   lv:{b:"Stationary rips against a reaching partner: 3 × 10",i:"Rip into one dribble and finish: 3 × 8 each side",p:"Live: defender tries to strip on every catch, 10 possessions"}},
+  {n:"Hanlen driving & contact series",v:"hanlenJass",t:1073,d:"Drew Hanlen's driving and contact drills from a full NBA workout: initiating contact on the way to the rim, not just at the finish.",
+   c:["Make contact on the drive, not just at the finish","Bump, rebalance, then rise","Two feet on the bump for control"],
+   m:["Soft drives that avoid the body","Losing the ball on the bump"],
+   lv:{b:"Slow walk-through of each finish: 10 reps",i:"Game speed into a pad: 3 × 8",p:"Same series with a live defender trailing: 20 reps"}},
+  {n:"Fly-by & counter finishing",v:"cjClowney",t:477,also:[["cjClowney",566],["cjClowney",1116]],d:"The counter to contact: avoid it with a fly-by move, then strong finishing and countering.",
+   c:["Read the defender's commitment","If they lunge, get past the hit instead of absorbing it","Finish strong after the counter"],
+   m:["Always taking the contact","Countering before the defender commits"],
+   lv:{b:"Walk-through with a pad that steps in: 10 reps",i:"Game speed, coach decides bump or fly-by late: 3 × 8",p:"Live: bump or fly-by on your own read, 10 possessions"}}
+ ],
+ plan:[["0–8","Contact resistance"],["8–18","Inside-hand / shoulder bump"],["18–30","Pressing through & owning the line"],["30–42","Driving through contact & finishing under pressure"],["42–52","Ball protection & rip-throughs"],["52–60","Live: bump or fly-by"]],
+ more:[["haliHanlen",289,"Tyrese Haliburton with Drew Hanlen: finishing, balance and physicality"],["holger",720,"Holger Geschwindner: driving and protection"],["mcleod",3810,"Gordon McLeod: post defense and bumping (the defensive side)"]]
+},
+{key:"driving",name:"Driving",
+ why:"The drive is a decision, not just a dribble. Drew Hanlen's full NBA workout teaches the hang dribble, get-in get-out and reading the defender. Arik Shivek adds the EuroLeague penetration principles.",
+ leads:"Drew Hanlen (Pure Sweat) · Arik Shivek (Israel national team head coach 2009–14) · Phil Handy · Jamahl Mosley & Ryan Saunders",
+ feature:{v:"hanlenJass",note:"A full 54-minute NBA-style workout from start to finish. Hanlen explains every drill, from the finishing warm-up through contact drives, hang dribbles and reading defenders.",
+  ch:[[0,"Introduction"],[129,"Finishing warm-up"],[492,"High-finish drills"],[805,"Advanced finishing moves"],[1073,"Driving and contact drills"],[1390,"Hang dribble techniques"],[1773,"Get-in get-out drill"],[2015,"Advanced combo moves"],[2431,"Mind-game read drills"],[2652,"Manipulating defenders"],[3104,"Conclusion"]]},
+ drills:[
+  {n:"Penetration principles",v:"shivek",t:145,d:"Arik Shivek's penetration techniques: when, where and how to attack, taught the way European clubs build young guards.",
+   c:["Attack the defender's top (lead) foot","Drive in straight lines toward the rim, not across the floor","Know your two options before you drive: finish or kick","Head up when you're two steps into the paint"],
+   m:["Driving with no plan","Dribbling sideways and letting the help load"],
+   lv:{b:"Cone defender, 4 driving lanes, 6 reps each",i:"Passive defender who shades one side: 4 × 6",p:"Live 1-on-1 plus a help defender who must be read: 12 possessions"}},
+  {n:"First-step power",v:"brinec",t:0,d:"Tomaž Brinec's power exercises for an explosive first step. This is a full session without chapters, so watch it straight through and pick 3–4 exercises.",
+   c:["Push off the ball of the back foot","First step low and long, chest over the knee","Drive the opposite arm hard","Full rest between explosive sets"],
+   m:["Standing up on the first step","Conditioning-pace reps (power needs rest)"],
+   lv:{b:"3 exercises × 2 × 6, full rest",i:"4 exercises × 3 × 6",p:"4 exercises × 4 × 5 with a band or partner resistance, then 6 live first-step races"}},
+  {n:"Attack angles",v:"handyTHT",t:431,also:[["handyTHT",527]],d:"Driving angles and dribble reactions with Talen Horton-Tucker.",
+   c:["Angle the drive to cut off the help","Get your shoulder past the defender's hip","Burst out of the angle with the first dribble","React to the coach's hand (dribble reactions)"],
+   m:["Driving straight into the defender's chest","Rounding the angle and drifting wide"],
+   lv:{b:"Cones at 45° from the wing: 3 × 6 each side",i:"Coach's hand decides the direction late: 4 × 6",p:"Live from a closeout, 3 dribbles max: 12 possessions"}},
+  {n:"Hang dribble",v:"hanlenJass",t:1390,d:"Drew Hanlen's hang dribble: hold the ball in the air for a beat to freeze the defender, then attack.",
+   c:["Hang the ball, keep the body calm","Eyes up at the rim, which sells the shot","Attack the moment the defender rises or stops their feet","Push the next dribble out, past the defender's hip"],
+   m:["Hanging too long (carry risk)","No change of speed after the hang"],
+   lv:{b:"Walk-through, 10 each hand",i:"Hang into a drive and finish: 3 × 8",p:"Live: hang only when the defender backs up, 10 possessions"}},
+  {n:"Get-in get-out",v:"hanlenJass",t:1773,d:"Getting into the paint and back out without a turnover: the pro habit of creating an advantage without forcing a bad shot.",
+   c:["Get in with a purpose (two feet in the paint)","Get out with your eyes up","Pass, reset or re-attack. Never pick the ball up stuck"],
+   m:["Getting stuck in the paint on two feet","Leaving the paint with your back to the play"],
+   lv:{b:"Walk-through of the paths, 10 reps",i:"Game speed against a passive help defender: 3 × 8",p:"Live with a help defender, score only after a kick-out pass: 10 possessions"}},
+  {n:"Freezing the defender",v:"handyTHT",t:633,d:"Changes of pace and head fakes that freeze the defender before the drive.",
+   c:["Sell with the eyes and shoulders","Slow, then fast","Attack the instant their feet stop"],
+   m:["One speed every rep","Fakes with the ball only, not the body"],
+   lv:{b:"Freeze and go, 10 each side",i:"Freeze into a pull-up or drive: 3 × 8",p:"Live 1-on-1 from the top: 10 possessions"}},
+  {n:"Game-speed drive finishing",v:"mosley",t:1054,also:[["mosley",550]],d:"Jamahl Mosley and Ryan Saunders: the pivot and finishing series, then game-speed drives.",
+   c:["Every rep at game speed","Same finish mechanics at full speed","Finish through the contact"],
+   m:["Half speed in practice, full speed only in games","Changing the finish under speed"],
+   lv:{b:"Pivot series, 3 × 6 each side",i:"Full-speed drives from the wing and the top: 4 × 6",p:"Drives against a trailing defender: 20 reps, 70% target"}},
+  {n:"Read drills & manipulating defenders",v:"hanlenJass",t:2431,also:[["hanlenJass",2652]],d:"Drew Hanlen's mind-game read drills and manipulating the defender: setting up the defender two moves ahead.",
+   c:["Read the defender's weight and feet","Attack what they give you","Set them up two moves ahead","Your first move is a question, your second is the answer"],
+   m:["Predetermined moves","Moving too fast to read"],
+   lv:{b:"Coach's signal decides the move: 10 reps",i:"Passive defender gives a read: 3 × 8",p:"Live 1-on-1, 3 dribbles: 12 possessions"}},
+  {n:"Shot fakes & finishes",v:"shivek",t:1310,d:"Arik Shivek: shot fakes off the catch into drives and finishes.",
+   c:["Fake at shooting height with the eyes on the rim","Stay low on the fake","Rip through and attack the hip"],
+   m:["Fake too high (you stand up)","Fake and pause"],
+   lv:{b:"Catch, fake, one-dribble layup: 10 each side",i:"Against a closeout pad: 3 × 8",p:"Live closeout, shoot or drive: 12 possessions"}}
+ ],
+ plan:[["0–10","First-step power"],["10–20","Penetration principles & attack angles"],["20–32","Hang dribble & freeze"],["32–44","Get-in get-out & read drills"],["44–54","Game-speed drive finishing"],["54–60","Live 1-on-1, 3 dribbles max"]],
+ more:[["juju",84,"Phil Handy with Juju Watkins: attacking the defender"],["haliHanlen",748,"Tyrese Haliburton with Drew Hanlen: rapid moves and separation"]]
+},
+{key:"footwork",name:"Perimeter Footwork & Moves",
+ why:"Footwork is the base of every perimeter move: getting open, triple threat, step-backs, spins and pivots. Rick Carlisle's NBA footwork clinic and Phil Handy's work with Isaiah Thomas and Markieff Morris are the core.",
+ leads:"Rick Carlisle · Phil Handy with Isaiah Thomas & Markieff Morris · Brent Matehaere · Paul Henare",
+ feature:{v:"carlisleFoot",note:"A full footwork clinic: side steps, runners, step-backs and pick-and-pop footwork, built around a modern game that values the 3-point line.",
+  ch:[[0,"Importance of the 3-point line"],[185,"Advanced shooting drills"],[511,"Side-step footwork"],[743,"Integrated shooting sequence"],[1012,"The runner shot"],[1243,"Mental game and feel"],[1501,"Step-back techniques"],[1841,"Pick-and-pop drills"],[2224,"Extending shooting range"]]},
+ drills:[
+  {n:"V-step to get open",v:"matehaere",t:328,d:"Brent Matehaere's V-step: take the defender in toward the basket, then come out hard to the ball.",
+   c:["Sell the cut inward with two hard steps","Plant on the outside foot and change direction sharply","Show your hands as a target","Catch in a shooting stance, facing the rim"],
+   m:["Rounded, banana-shaped cut","Catching while drifting away from the basket"],
+   lv:{b:"10 V-steps each wing, no defender",i:"Passive defender in denial: 3 × 6 each side",p:"Live denial, 5 seconds to get open: 12 reps"}},
+  {n:"Split step & turnout",v:"henare",t:1467,also:[["henare",747],["henare",1136]],d:"Paul Henare: split step and turnout, seal step and hip turns, then momentum rips.",
+   c:["Split step (both feet land together) just before the catch","Turn the hips toward the rim on the catch","Rip with the momentum you already have"],
+   m:["Slow turn after the catch","Catching flat and upright"],
+   lv:{b:"Split step and turn, 10 each side",i:"Turnout into a rip and drive: 3 × 8",p:"Live off a denial: 10 possessions"}},
+  {n:"Triple threat & jab series",v:"handyMorris",t:512,also:[["kokoGuards",4737]],d:"Triple threat with Markieff Morris, plus Igor Kokoškov's rip-through and jab step.",
+   c:["Knees bent, ball on the hip, eyes on the rim","Short, sharp jab of about a shoe length","Read the defender: back = shoot, still = drive","Jab and go without re-setting"],
+   m:["Long jab that kills your balance","Ball held in front of the chest (easy to strip)"],
+   lv:{b:"Jab, then shoot / jab-drive / jab-crossover: 10 each",i:"Jab plus a counter against a passive defender: 3 × 8",p:"Live 1-on-1 from the catch, 2 dribbles max: 12 possessions"}},
+  {n:"Side step",v:"carlisleFoot",t:511,d:"Rick Carlisle's side-step footwork for 3-point shots off the bounce.",
+   c:["Step wide with the lead foot, then bring the trail foot in","Land balanced with the shoulders level","Shoot as soon as you land"],
+   m:["Drifting sideways on the shot","Stepping on the line"],
+   lv:{b:"10 side steps each direction",i:"Off one dribble from the wing: 3 × 8",p:"Against a hard closeout: 20 reps, 45% target"}},
+  {n:"Step back",v:"carlisleFoot",t:1501,also:[["handyMorris",720]],d:"Step-back technique from Rick Carlisle, then with Markieff Morris.",
+   c:["Push off the front foot, not the back","Ball high and tight during the step","Land balanced and square"],
+   m:["Drifting backwards on the shot","Sliding the pivot foot (travel)"],
+   lv:{b:"Step back from 2 m inside the arc: 10 each side",i:"Drive two dribbles, then step back: 3 × 8",p:"Live with a defender who's trying to stay attached: 12 possessions"}},
+  {n:"Spin move mechanics",v:"handyITfoot",t:93,d:"Spin move mechanics with Isaiah Thomas.",
+   c:["Plant the foot close to the defender's feet","Pull the ball tight to the hip","Spin low and come out on a straight line to the rim"],
+   m:["Wide, looping spin","Ball swinging away from the body"],
+   lv:{b:"Walk-through against a chair: 10 each side",i:"Game speed against a pad: 3 × 6",p:"Live: spin only when the defender cuts you off, 10 possessions"}},
+  {n:"Reverse pivot",v:"matehaere",t:1043,d:"Reverse pivot mechanics to escape pressure and re-open the floor.",
+   c:["Stay low through the pivot","Ball tight on the hip, away from the defender","Pivot foot stays planted"],
+   m:["Standing up during the pivot","Ball exposed during the turn"],
+   lv:{b:"10 each side, stationary",i:"Off a pick-up against a reaching partner: 3 × 8",p:"Live 1-on-1 when trapped on the sideline: 10 possessions"}},
+  {n:"Turnaround fades",v:"handyMorris",t:616,d:"Turnaround fadeaways with Markieff Morris.",
+   c:["Read the defender's shoulder before turning","Same fade distance every rep","Release at the top"],
+   m:["Over-fading on an open shot","Turning without reading"],
+   lv:{b:"10 each shoulder from the mid-post",i:"Off one dribble: 3 × 8",p:"Live with a contesting defender: 12 possessions"}},
+  {n:"Freeze & pop",v:"handyITfoot",t:895,also:[["handyITfoot",687]],d:"Freeze-and-pop shots and creating separation with Isaiah Thomas.",
+   c:["Freeze the defender with a hold on the dribble","Pop straight up, no drift","Create separation before the shot"],
+   m:["No pause, so the defender is never frozen","Fading on the pop"],
+   lv:{b:"10 freeze-and-pops each side",i:"Freeze, pop or drive on the coach's call: 3 × 8",p:"Live 1-on-1: 10 possessions"}}
+ ],
+ plan:[["0–10","V-step & split step"],["10–20","Triple threat & jab series"],["20–32","Side step & step back"],["32–44","Spin & reverse pivot"],["44–54","Turnaround & freeze-pop"],["54–60","Live 1-on-1 from the wing"]],
+ more:[["handyTroy",23,"Phil Handy with Troy Brown Jr.: footwork base"],["matehaere",1519,"Brent Matehaere: creating separation to score"]]
+},
+{key:"spacing",name:"Spacing & Off-Ball",
+ why:"Most possessions are played without the ball. EuroLeague coaches build spacing and timing first. Ettore Messina explains the principles, Mosley and Saunders drill drive-and-drift, and Rip Hamilton shows how to be a threat without the ball.",
+ leads:"Ettore Messina (4× EuroLeague champion) · Jamahl Mosley & Ryan Saunders · Arik Shivek · Rip Hamilton (NBA champion)",
+ feature:{v:"messina",note:"Messina explains spacing and timing: how to teach them, correct them and build a shared vision on the court.",
+  ch:[[0,"Introduction to coaching"],[252,"Developing a teaching method"],[372,"Fundamentals of spacing"],[657,"Fundamentals of timing"],[963,"Correction and anticipation"],[1305,"Developing a unified vision"]]},
+ drills:[
+  {n:"Spacing rules",v:"messina",t:372,d:"Messina's fundamentals of spacing: distances, filling spots and keeping lanes open.",
+   c:["Stay about 4.5–5.5 m from the nearest teammate","Fill both corners first","Keep the driving lane from the ball to the rim open","One pass away means one pass, not two"],
+   m:["Crowding the ball handler","Two players in the same lane"],
+   lv:{b:"5-on-0 walk-through, coach freezes and checks the spots",i:"4-on-4 shell, spacing check on every ball reversal",p:"Live 4-on-4, spacing violation = turnover"}},
+  {n:"Timing",v:"messina",t:657,also:[["messina",963]],d:"Ettore Messina on timing: moving at the right moment relative to the ball, then how coaches correct it and teach players to anticipate.",
+   c:["Move when the ball handler can see you and pass","Arrive on time, not early","Cut when the ball is at eye level, not still on the dribble"],
+   m:["Cutting at the same moment as the drive (it fills the lane)","Arriving early and standing"],
+   lv:{b:"5-on-0, coach calls the timing out loud",i:"Shell with a passive defense: 4 × 2 minutes",p:"Live, coach stops play to correct timing"}},
+  {n:"Drive-and-drift",v:"mosley",t:2241,d:"Jamahl Mosley and Ryan Saunders: spacing on drives. The shooter drifts along the 3-point line to stay in the passer's view.",
+   c:["Drift along the 3-point line, away from your defender's help","Show your hands, ready to shoot","Shoot on the catch or attack the closeout"],
+   m:["Standing still when your teammate drives","Drifting into the passing lane"],
+   lv:{b:"2-on-0: drive and drift, 10 each side",i:"2-on-1: the defender helps or stays, 3 × 8",p:"3-on-3 live, scoring only off a drive: 12 possessions"}},
+  {n:"Cuts",v:"shivek",t:963,also:[["shivek",317]],d:"Arik Shivek: movement without the ball and executing cuts.",
+   c:["Sharp, straight-line cuts","Cut when the defender turns their head toward the ball","Back-cut when they overplay the denial"],
+   m:["Slow, rounded cuts","Cutting into a teammate's spot"],
+   lv:{b:"5-on-0, 3 types of cut, 5 each",i:"Shell with a passive defense: 3 × 2 minutes",p:"Live 3-on-3, back-cut layups count double"}},
+  {n:"Pin-down shooting",v:"mosley",t:1583,d:"Coming off pin-down screens into the shot.",
+   c:["Set your defender up by walking them toward the baseline","Use the screen shoulder to shoulder","Square your feet before the catch"],
+   m:["Running wide of the screen","Leaving before the screen is set"],
+   lv:{b:"No defender, 10 each side",i:"Passive trailing defender: 3 × 8",p:"Live, read the defender: curl, fade or pop. 12 reps"}},
+  {n:"Using off-ball screens",v:"plaza",t:34,also:[["plaza",1624]],d:"Joan Plaza: screening mechanics, then reading the defense off the screen.",
+   c:["Read the defender's position before using the screen","Curl when they trail, flare when they cheat under, fade when they go over the top","The screener reads too: slip or seal"],
+   m:["One read only","Using the screen before it's set"],
+   lv:{b:"5-on-0, walk through all three reads",i:"2-on-2, the defender chooses the coverage",p:"Live 3-on-3: 12 possessions"}},
+  {n:"Manipulating the defense",v:"rip",t:209,also:[["rip",517]],d:"Rip Hamilton's game manipulation: using hands, angles and footwork to get open, and staying a threat the whole time.",
+   c:["Use your hands to create space, legally","Change speed","Always be a threat to catch and shoot"],
+   m:["Predictable, same-speed movement","Running without a purpose"],
+   lv:{b:"Watch the breakdown, then shadow the moves 5-on-0",i:"2-on-2 off the ball: 3 × 2 minutes",p:"Live 3-on-3 with no dribbles allowed"}},
+  {n:"Creating 3-point space",v:"handyCatch",t:649,also:[["handyCatch",105]],d:"Phil Handy with Juju Watkins and Chelsea Gray: creating space for the catch-and-shoot 3.",
+   c:["Step back to the line, not onto it","Set your feet before the ball arrives","Use misdirection to lose the defender"],
+   m:["Feet on the line","Catching too far out of range"],
+   lv:{b:"10 reps each spot",i:"Against a passive defender: 3 × 8",p:"Live off-ball 1-on-1: 12 reps"}}
+ ],
+ plan:[["0–10","Spacing rules, 5-on-0"],["10–20","Timing & cuts"],["20–32","Drive-and-drift"],["32–44","Pin-downs & off-ball screens"],["44–54","Manipulating the defense"],["54–60","3-on-3 live with spacing rules"]],
+ more:[["ruiz",876,"Joaquín Ruiz Lorente: perimeter screening drills"],["rip",0,"Rip Hamilton: the full breakdown"]]
+},
+{key:"pnr",name:"Pick and Roll",
+ why:"The pick and roll is the main action at NBA and EuroLeague level. Michal Ježdík's full read-and-respond session covers the ball handler and the screener. Phil Handy with Steve Nash adds the craft of the handler.",
+ leads:"Michal Ježdík · Phil Handy with Steve Nash · Jama Mahlalela (Raptors player development) · Chris Johnson · Jasmin Repeša",
+ feature:{v:"jezdik",note:"A full read-and-respond P&R session: faking, reading the court, hedges, under-screens, setting screens and backhand passing.",
+  ch:[[0,"Introduction to P&R"],[46,"Ball handling and faking"],[248,"Reading the court"],[462,"Defensive interaction drills"],[746,"Speed changes and crossovers"],[1024,"Handling double teams"],[2023,"Responding to hedges"],[2181,"Baseline attack"],[2457,"Setting effective screens"],[2890,"Countering the under-screen"],[3160,"Backhand passing"],[3311,"Read and react"]]},
+ drills:[
+  {n:"Setting up the screen",v:"jezdik",t:46,also:[["juju",602]],d:"Faking and setting up the defender before using the screen (Ježdík), plus setting up the defender with Juju Watkins.",
+   c:["Take your defender away from the screen first","Wait until the screen is set","Come off shoulder to shoulder, with no gap for the defender to slip through"],
+   m:["Leaving before the screen is set","Coming off wide"],
+   lv:{b:"2-on-0: set-up, then use the screen, 10 each side",i:"2-on-1 with the on-ball defender only: 3 × 8",p:"2-on-2 live: 12 possessions"}},
+  {n:"Reading the coverage",v:"jezdik",t:248,also:[["jezdik",2023],["jezdik",2890]],d:"Reading the court, responding to hedges, and countering when the defender goes under the screen.",
+   c:["Read the big's position on the first dribble","Hedge: retreat dribble or split, then find the roller","Under: shoot it or re-screen","Drop: pull up or float before the big's reach"],
+   m:["Deciding before the screen","Picking up the ball against a hedge"],
+   lv:{b:"Coach calls the coverage out loud: 10 reps each",i:"Passive defense shows one coverage: 3 × 8",p:"Live, defense mixes coverages: 15 possessions"}},
+  {n:"Snake & cutback",v:"juju",t:417,also:[["juju",506],["handyFilay",183]],d:"Phil Handy: cutbacks and snakes with Juju Watkins and Quinn Cook, and manipulating the defense with Filayyy.",
+   c:["Snake back to the middle after the screen","Keep the screened defender on your back","Read the big: pull-up, floater or pass"],
+   m:["Dribbling away from the play","Letting the defender back in front"],
+   lv:{b:"2-on-0, snake into a pull-up: 10 each side",i:"2-on-1 with a drop big: 3 × 8",p:"2-on-2 live: 12 possessions"}},
+  {n:"Pocket pass & air hook",v:"handyFilay",t:0,also:[["handyFilay",267]],d:"Phil Handy: the pocket pass and the air hook pass to the roller.",
+   c:["Pass on time, as the big steps up","Bounce pocket pass low past the big's hands","Air hook over the big when the pocket is closed"],
+   m:["Late pass after the roller has stopped","Telegraphing the pass with the eyes"],
+   lv:{b:"2-on-0, 10 of each pass from each side",i:"2-on-1 with a hedging big: 3 × 8",p:"2-on-2 live: 12 possessions, pocket assists count double"}},
+  {n:"Reading the big",v:"handyITfoot",t:350,also:[["handyITfoot",425]],d:"Reading the big man and PnR basics with Isaiah Thomas.",
+   c:["See the big's feet, not their hands","Attack their top foot","When they commit to you, the roller is open"],
+   m:["Eyes down on the ball","Attacking into the big's body"],
+   lv:{b:"2-on-0 walk-through with a coach as the big",i:"2-on-1, the big chooses: 3 × 8",p:"2-on-2 live: 12 possessions"}},
+  {n:"PnR split",v:"mahlalela",t:828,d:"Jama Mahlalela: splitting the pick and roll when the defense traps or hedges hard.",
+   c:["Split low and fast, between the two defenders","Ball on the far side, away from both","Attack the rim after the split"],
+   m:["High dribble through the gap","Splitting a well-closed trap"],
+   lv:{b:"Walk-through between two pads: 10 reps",i:"Game speed through a soft trap: 3 × 6",p:"Live against a hard hedge: 10 possessions"}},
+  {n:"Baseline attack",v:"jezdik",t:2181,d:"Attacking along the baseline out of side pick and roll.",
+   c:["Read the corner defender","Finish or kick to the corner","Keep a pivot available"],
+   m:["Getting trapped on the baseline","Leaving your feet with no plan"],
+   lv:{b:"2-on-0: drive, finish or kick, 10 each",i:"2-on-1 with a corner helper: 3 × 8",p:"3-on-3 live: 12 possessions"}},
+  {n:"Setting effective screens",v:"jezdik",t:2457,also:[["repesa",0]],d:"Setting the screen (Ježdík), plus Jasmin Repeša's principles of screening for centers.",
+   c:["Set the angle toward where the handler wants to go","Wide, strong, stationary base","Sprint out of the screen into the roll or pop"],
+   m:["Moving screen (foul)","Slow out of the screen"],
+   lv:{b:"2-on-0: 10 screens from each angle",i:"2-on-1 with a defender to screen: 3 × 8",p:"2-on-2 live: 12 possessions"}},
+  {n:"Short roll",v:"cjClowney",t:1047,d:"Chris Johnson with Noah Clowney: short-roll pocket drills.",
+   c:["Catch in the pocket, facing the rim","Make the read: lob, corner or floater","Decide in under a second"],
+   m:["Holding the ball","Rolling too deep"],
+   lv:{b:"2-on-0: short roll into a floater, 10 reps",i:"3-on-1: short roll and read the helper, 3 × 8",p:"4-on-4 live: 12 possessions"}},
+  {n:"Pick and pop",v:"carlisleFoot",t:1841,d:"Rick Carlisle: pick-and-pop footwork and shooting.",
+   c:["Pop to open space, away from the help","Feet set on the catch","Shoot or attack the closeout"],
+   m:["Popping into a defender","Slow pop"],
+   lv:{b:"2-on-0: 10 pops each side",i:"2-on-1, the big's defender closes out: 3 × 8",p:"2-on-2 live: 12 possessions"}},
+  {n:"Read & react 2-on-2",v:"jezdik",t:3311,also:[["mahlalela",1335]],d:"Read-and-react situations for the handler and the screener together, plus decision making for the big.",
+   c:["Talk before the screen","Read together, react together","The handler and the screener make the same read"],
+   m:["Each player reading alone","No communication"],
+   lv:{b:"2-on-0, coach calls the read",i:"2-on-1: 3 × 8",p:"2-on-2 live, first to 7 points"}}
+ ],
+ plan:[["0–10","Setting up the screen & setting screens"],["10–22","Reading the coverage"],["22–34","Snake, cutback & pocket pass"],["34–44","Short roll & pick and pop"],["44–54","Split & baseline attack"],["54–60","Live 2-on-2"]],
+ more:[["nashPnr","Steve Nash: how to score in the pick and roll (full, no chapters)"],["frank",0,"Lawrence Frank: pick 'n' roll offense (team concepts)"],["mahlalela",1435,"Jama Mahlalela: dribble-handoff reads"]]
+},
+{key:"defense",name:"Defense",
+ why:"Individual defense wins at the elite level: footwork, closeouts, containment and denial. Gordon McLeod's 90-minute FIBA session is the core. Ivan Rudež and Dan Burke (NBA assistant) add closeout detail.",
+ leads:"Gordon McLeod (FIBA clinic) · Ivan Rudež · Dan Burke (NBA assistant coach) · John Patrick · Igor Kokoškov",
+ feature:{v:"mcleod",note:"A full 90-minute individual defense session, from footwork basics to containment, closeouts, denial and post defense.",
+  ch:[[0,"Defensive footwork basics"],[122,"Sliding and sprint drills"],[393,"Drop step and angle training"],[644,"Full-court pressure principles"],[1006,"One-on-one containment"],[1345,"Closing out and team defense"],[1555,"One-on-one competitive drills"],[1888,"Team help defense"],[2245,"Denial and transition defense"],[2724,"Closed stance and ball awareness"],[3451,"Post defense fundamentals"],[3810,"Post defense and bumping"]]},
+ drills:[
+  {n:"Defensive footwork basics",v:"mcleod",t:0,also:[["matehaere",0]],d:"Gordon McLeod's stance and basic footwork, with Brent Matehaere's defensive footwork drills as a second version.",
+   c:["Stance wider than the shoulders, hips down","Weight on the balls of the feet","Hands active: one high, one in the passing lane","Head level, no bouncing"],
+   m:["Standing up between slides","Weight on the heels"],
+   lv:{b:"5 minutes of stance and footwork every practice",i:"8 minutes, coach changes direction by signal",p:"10 minutes, wearing a resistance band"}},
+  {n:"Slide & sprint",v:"mcleod",t:122,also:[["patrick",340]],d:"Sliding, then turning and sprinting when the ball gets past you. Changing between the two without losing position.",
+   c:["Slide without crossing the feet","Turn and sprint the moment you're beaten","Get back in front, then slide again"],
+   m:["Crossing your feet on the slide","Sliding when you should sprint"],
+   lv:{b:"Baseline to half court: 3 trips",i:"Full court zigzag: 5 trips",p:"Full court with a live ball handler: 8 trips"}},
+  {n:"Drop step & angle",v:"mcleod",t:393,d:"Drop step and angle training: recovering when the ball handler changes direction.",
+   c:["Drop step at 45°, not straight back","Cut off the angle to the rim","Push off the front foot"],
+   m:["Turning your back to the ball","Opening the hip too far"],
+   lv:{b:"10 drop steps each side, no ball",i:"Against a dribbler at half speed: 3 × 8",p:"Live 1-on-1 in a lane 4 m wide"}},
+  {n:"Zigzag pressure",v:"patrick",t:871,d:"John Patrick: zigzag defensive pressure up the floor.",
+   c:["Turn the dribbler at least 3 times per half","Stay in front, chest to the ball","Make them dribble with their weak hand"],
+   m:["Reaching for the ball","Letting them go straight"],
+   lv:{b:"Half court, offense at half speed",i:"Full court, offense at game speed",p:"Full court live: offense can score if they beat you"}},
+  {n:"Closeout technique",v:"rudez",t:97,also:[["rudez",173]],d:"Ivan Rudež: closeout technique, then correcting and repeating it.",
+   c:["Sprint the first two-thirds, then chop the feet","High hand to the shooter's eyes","Arrive balanced, ready to slide"],
+   m:["Flying by the shooter","Arriving upright"],
+   lv:{b:"Closeout and freeze: 10 reps",i:"Closeout and slide one direction: 3 × 8",p:"Live closeout 1-on-1: 12 possessions"}},
+  {n:"Lateral explosion & chest contact",v:"rudez",t:262,also:[["rudez",398]],d:"Lateral explosion, then perfecting chest contact to stop a drive without fouling.",
+   c:["Beat the driver to the spot","Chest to chest, arms up","Absorb, don't push"],
+   m:["Reaching with the hands","Leaning into the contact"],
+   lv:{b:"Walk-through of the contact: 10 reps",i:"Against a pad driver at game speed: 3 × 6",p:"Live drives: 12 possessions, no fouls allowed"}},
+  {n:"1-on-1 containment",v:"mcleod",t:1006,also:[["mcleod",1555]],d:"Containment drills, then competitive 1-on-1.",
+   c:["Keep the ball in front of you","Contest every shot without jumping","Finish the possession with a box-out"],
+   m:["Lunging for the ball","Biting on the first fake"],
+   lv:{b:"Half-speed offense: 10 reps",i:"Game speed in a narrow lane: 3 × 6",p:"Live 1-on-1, first to 5 stops"}},
+  {n:"Corner closeouts",v:"burke",t:177,also:[["burke",0]],d:"Dan Burke: closeout fundamentals, then the corner closeout.",
+   c:["Take away the baseline","Shorter closeout in the corner","Force the ball back toward the help"],
+   m:["Closing out too far (gives up the drive)","Opening the baseline"],
+   lv:{b:"10 corner closeouts each side",i:"Closeout and contain one dribble: 3 × 8",p:"Live from the corner: 12 possessions"}},
+  {n:"Seven-second drill",v:"rudez",t:1315,d:"Ivan Rudež's seven-second drill: full intensity on one possession.",
+   c:["Defend at full intensity for 7 seconds","Stay attached to every move","Talk the whole time"],
+   m:["Relaxing after 4–5 seconds","Silent defense"],
+   lv:{b:"5 reps, offense at half speed",i:"8 reps at game speed",p:"10 reps live, offense scores = run"}},
+  {n:"Denial",v:"mcleod",t:2245,also:[["patrick",678]],d:"Denial and transition defense, plus John Patrick's pressure and denial drills.",
+   c:["Hand and foot in the passing lane","See both the ball and your player","Jump to the ball on every pass"],
+   m:["Losing sight of the ball","Getting back-cut"],
+   lv:{b:"Walk-through of the positions",i:"Game speed denial on the wing: 3 × 30 seconds",p:"Live 2-on-2 denial: 12 possessions"}},
+  {n:"Hands & deflections",v:"rudez",t:1996,d:"Deflections and active hands.",
+   c:["Hands active and in the passing lanes","Swipe up from low to high, not down","Count deflections as a stat"],
+   m:["Reaching across the body (foul)","Swiping down"],
+   lv:{b:"10 deflection reps each hand",i:"Against a live dribbler: 3 × 30 seconds",p:"Live 3-on-3, count deflections"}},
+  {n:"Post defense & bumping",v:"mcleod",t:3451,also:[["mcleod",3810]],d:"Post defense fundamentals, then bumping cutters and posts before they get position.",
+   c:["Bump the post early, before the seal","Front or three-quarter depending on the ball","Chest contact, arms up"],
+   m:["Letting the post seal you","Fouling with the hands"],
+   lv:{b:"Walk-through of positions",i:"Game speed with entry passes: 3 × 8",p:"Live post 1-on-1: 12 possessions"}}
+ ],
+ plan:[["0–10","Footwork, slide and sprint"],["10–20","Drop step, zigzag"],["20–32","Closeouts (Rudež, Burke)"],["32–44","Containment & chest contact"],["44–54","Denial & post defense"],["54–60","1-on-1 competitive"]],
+ more:[["kokoDef","Igor Kokoškov: set of drills for defense (full, no chapters)"],["patrick",1991,"John Patrick: pick-and-roll defense"],["rudez",2249,"Ivan Rudež: pick-and-pop defense"]]
+},
+{key:"post",name:"Post Play",
+ why:"Post play is footwork, positioning and touch. Chris Johnson's full NBA big-man workout and Juan Antonio Orenga's session from the Spanish national team are the core.",
+ leads:"Chris Johnson · Juan Antonio Orenga (former Spain national team head coach) · Phil Handy with Markieff Morris · Joaquín Ruiz Lorente",
+ feature:{v:"cjClowney",note:"A full NBA big-man workout with Noah Clowney: bumping, physicality, short rolls, the Tristan Thompson double jump and baseline moves.",
+  ch:[[0,"Introduction"],[36,"Inside-hand bumping"],[208,"Quick-change drills"],[306,"Physicality and purposeful driving"],[383,"Pressing through the defender"],[477,"The fly-by move"],[663,"Driving the lane with purpose"],[766,"Owning the driving line"],[881,"Tristan Thompson double jump"],[1047,"Short-roll pocket drills"],[1116,"Strong finishing and countering"],[1218,"High-speed offensive drills"],[1338,"Baseline crab and TT moves"]]},
+ drills:[
+  {n:"Seal & establish position",v:"henare",t:747,d:"Paul Henare: seal steps and hip turns to establish post position before the catch.",
+   c:["Wide base, low hips","Seal with the hips and backside, arm bar on the defender","Show a hand target away from the defender","Hold the seal until the ball arrives"],
+   m:["Narrow stance that gets pushed out","Sealing too far from the block"],
+   lv:{b:"Walk-through of the seal against a passive defender: 10 each side",i:"Defender pushes with a pad: 3 × 8",p:"Live: defender fights for position, entry pass in 3 seconds"}},
+  {n:"Post work & separation",v:"handyMorris",t:33,also:[["handyMorris",164]],d:"Post work and creating separation with Markieff Morris.",
+   c:["Read the defender before you move","Create separation before you shoot","Feel the defender with your back and hip"],
+   m:["Forcing a contested shot","Dribbling too much in the post"],
+   lv:{b:"10 catches each side with no defender",i:"Passive defender: 3 × 8",p:"Live post 1-on-1: 12 possessions"}},
+  {n:"Power moves & turning",v:"handyMorris",t:380,d:"Power moves and turns.",
+   c:["Strong drop step toward the rim","Two-foot finish, chin the ball","Seal the defender with the lead shoulder"],
+   m:["Off balance at the finish","Low ball (easy to strip)"],
+   lv:{b:"10 each side, no defender",i:"Against a pad: 3 × 8",p:"Live: 12 possessions"}},
+  {n:"Turnaround fades",v:"handyMorris",t:616,d:"Turnaround fadeaways from the post.",
+   c:["Read the defender's shoulder before you turn","Same fade distance every time","Release at the top"],
+   m:["Over-fading","Turning into the defender"],
+   lv:{b:"10 each shoulder, no defender",i:"Against a contesting pad: 3 × 8",p:"Live: 12 possessions"}},
+  {n:"Tristan Thompson double jump",v:"cjClowney",t:881,d:"The double jump around the rim: a quick second jump for tip-ins and putbacks.",
+   c:["Quick second jump with no full re-load","Hands high the whole time","Tip or catch at the top"],
+   m:["Slow second jump","Bringing the ball down"],
+   lv:{b:"10 continuous tips, 3 sets",i:"Off a missed shot: 3 × 8",p:"Live rebound battles: 10 reps"}},
+  {n:"Baseline crab & TT moves",v:"cjClowney",t:1338,d:"Baseline crab steps and TT (Tristan Thompson) moves along the baseline.",
+   c:["Low and wide on every step","Ball protected high","Finish strong through contact"],
+   m:["Standing upright","Ball low and exposed"],
+   lv:{b:"10 each side, no defender",i:"Against a pad: 3 × 8",p:"Live from the short corner: 12 possessions"}},
+  {n:"Post passing & decisions",v:"ruiz",t:1947,also:[["ruiz",1716]],d:"Joaquín Ruiz Lorente: post player development, then post passing and decision making.",
+   c:["See where the help comes from","Pass out of the double team immediately","Find the cutter or the open shooter"],
+   m:["Forcing the move into a double team","Holding the ball too long"],
+   lv:{b:"2-on-0: post feeds to cutters, 10 reps",i:"2-on-1 with a doubling defender: 3 × 8",p:"3-on-3 with a post: 12 possessions"}},
+  {n:"Post finishing",v:"ruiz",t:2720,d:"Post finishing drills.",
+   c:["Finish strong, chin the ball","Use the glass from the angle","Finish with both hands"],
+   m:["Soft finishes","Finishing only with the strong hand"],
+   lv:{b:"10 each side",i:"Against a pad: 3 × 8",p:"Live: 12 possessions"}},
+  {n:"Guard post-ups",v:"kokoGuards",t:870,d:"Igor Kokoškov's post-up and reverse moves for guards: punishing a smaller defender.",
+   c:["Seal the smaller defender deep","Quick, decisive move","Read the help before you turn"],
+   m:["Holding the ball","Posting too far from the rim"],
+   lv:{b:"10 each side, no defender",i:"Against a passive defender: 3 × 8",p:"Live: 12 possessions"}}
+ ],
+ plan:[["0–10","Seal & establish position"],["10–22","Power moves & turning"],["22–34","Turnarounds & fades"],["34–44","Double jump & baseline moves"],["44–54","Post passing & decisions"],["54–60","Live 1-on-1 in the post"]],
+ more:[["orenga","Juan Antonio Orenga: big man workout (full, no chapters)"],["repesa",1449,"Jasmin Repeša: offensive drills and rhythm for centers"],["haliHanlen",450,"Tyrese Haliburton with Drew Hanlen: physicality in backdowns"]]
+}
+];
+
+const T=[
+ ["Phil Handy","NBA assistant & skills coach","Won NBA titles as an assistant with Cleveland (2016), Toronto (2019) and the Lakers (2020). Known for player development with LeBron James, Kyrie Irving and others. His YouTube channel posts full NBA workouts."],
+ ["Drew Hanlen","Pure Sweat Basketball","NBA skills coach whose clients have included Joel Embiid, Jayson Tatum, Bradley Beal, Zach LaVine and Andrew Wiggins. His videos show full workouts with detailed explanations."],
+ ["Igor Kokoškov","EuroLeague & NBA coach","Won EuroBasket 2017 with Slovenia. First European-born NBA head coach (Phoenix, 2018). Later coached Fenerbahçe. Known as a guard development specialist."],
+ ["Dimitris Itoudis","EuroLeague champion","Won the EuroLeague with CSKA Moscow (2016, 2019). His FIBA session is a full individual shooting workout for guards."],
+ ["Ettore Messina","4× EuroLeague champion","Won EuroLeague titles with Virtus Bologna and CSKA Moscow. Also coached Olimpia Milano and was a San Antonio Spurs assistant."],
+ ["Rick Carlisle","NBA champion head coach","Won the 2011 NBA title with Dallas. His FIBA clinics cover shooting and footwork with demo players."],
+ ["Holger Geschwindner","Dirk Nowitzki's mentor","Built Dirk Nowitzki's shot and game from youth through his NBA career. His FIBA session is about finishing and shooting fundamentals."],
+ ["Chris Johnson","NBA skills trainer","LA-based trainer who has worked with Jimmy Butler, Jaylen Brown, Harrison Barnes and others. Known for physicality and contact finishing."],
+ ["Arik Shivek","Israel national team coach","Head coach of the Israel national team 2009–14. His FIBA session covers developing young guards."],
+ ["Michal Ježdík","Czech coach","One of the most recognized coaches in Czech basketball. His FIBA session teaches read-and-respond pick and roll."],
+ ["Gordon McLeod","FIBA clinician","His FIBA session on individual defense runs 90 minutes and covers footwork, containment, closeouts and post defense."],
+ ["Ivan Rudež","Slovakia national team coach","His FIBA session covers individual closeout tactics."],
+ ["Dan Burke","NBA assistant coach","Long-time NBA assistant known for defense, including many years with the Indiana Pacers. His FIBA session covers closeout defense."],
+ ["Jama Mahlalela","NBA player development","Player development coach with the Toronto Raptors. His FIBA session covers individual development drills."],
+ ["Jamahl Mosley & Ryan Saunders","NBA coaches","Both later became NBA head coaches. Their FIBA session covers individual offensive development."],
+ ["Tyler Relph","Skills trainer","Works with NBA and WNBA players. Known for ball handling and shooting workouts."],
+ ["Dave Love","Shooting specialist","Known for teaching shooting through habit isolation and layering."],
+ ["Paul Henare","FIBA clinician","His FIBA session covers fundamental individual offensive skills."],
+ ["Juan Antonio Orenga","Former Spain national team coach","His FIBA session is a full big-man workout."],
+ ["Kennedy Hamilton","FIBA clinician","His FIBA session combines conditioning with contact training."]
+];
+
+const W=[
+ ["Day 1","Shooting + Perimeter Footwork"],
+ ["Day 2","Ball Handling + Driving + Finishing"],
+ ["Day 3","Bump + Post Play (physical day)"],
+ ["Day 4","Pick and Roll + Spacing (2v2 / 3v3)"],
+ ["Day 5","Defense + shooting under fatigue"]
+];
+
+let level="i";
+try{level=localStorage.getItem("psa-level")||"i"}catch(e){}
+const LV={b:["Beginner","Learn the technique. No defender, slow to medium speed, every rep clean."],i:["Intermediate","Game speed. A passive defender, pad or coach's call adds a read."],p:["Pro","Live reps, decisions and fatigue. Compete and keep score."]};
+function esc(s){return String(s).replace(/[&<>"]/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]))}
+
+// ---- Player state ----
+let player=null, ready=false, pending=null;
+let current="shooting", items=[], nowItem=null, auto=false;
+const course=()=>C.find(x=>x.key===current)||C[0];
+const drillItem=(c,i)=>{const d=c.drills[i];return {k:d.v,t:d.t,e:segEnd(d.v,d.t),name:d.n,course:c.key,di:i}};
+
+function onYouTubeIframeAPIReady(){
+  // YouTube refuses to play inside a page opened straight from the computer (file://), so explain instead of showing error 153.
+  if(location.protocol==="file:"){
+    document.querySelector(".screen").innerHTML=`<div class="offline"><b>The player works once the site is online</b><span>This file was opened straight from the computer, and YouTube blocks its player there (error 153). Open the site from its GitHub Pages link instead. Until then, “Open on YouTube” below still works.</span><span dir="rtl" lang="he">הנגן יעבוד כשהאתר יהיה באוויר. הקובץ נפתח ישירות מהמחשב, ויוטיוב חוסם שם את הנגן (שגיאה 153). פתחו את האתר מהקישור של GitHub Pages.</span></div>`;
+    return;
+  }
+  const first=nowItem||drillItem(course(),0);
+  player=new YT.Player("yt",{width:"100%",height:"100%",videoId:V[first.k].id,
+    playerVars:{playsinline:1,rel:0,start:first.t,end:first.e||undefined},
+    events:{
+      onReady:()=>{ready=true;if(pending){load(pending,true);pending=null}},
+      onStateChange:e=>{
+        if(e.data!==0||!auto||!nowItem||nowItem.di==null)return;
+        // YouTube can report "ended" for the previous clip while the next one loads: only advance when this clip really reached its end.
+        if(Date.now()-lastLoad<2500)return;
+        let t=0;try{t=player.getCurrentTime()}catch(x){}
+        if(nowItem.e&&t<nowItem.e-3)return;
+        step(1,true)}
+    }});
+}
+window.onYouTubeIframeAPIReady=onYouTubeIframeAPIReady;
+
+let lastLoad=0;
+function load(it,play){
+  lastLoad=Date.now();
+  const o={videoId:V[it.k].id,startSeconds:it.t};
+  if(it.e)o.endSeconds=it.e;
+  try{play?player.loadVideoById(o):player.cueVideoById(o)}catch(e){}
+}
+function playItem(it,play=true){
+  nowItem=it;renderNP();markPlaying();
+  if(!ready){pending=play?it:null;return}
+  load(it,play);
+}
+function step(dir,play){
+  const c=C.find(x=>x.key===(nowItem&&nowItem.course)||current)||course();
+  let i=(nowItem&&nowItem.di!=null&&nowItem.course===c.key)?nowItem.di+dir:(dir>0?0:c.drills.length-1);
+  if(i<0)i=0;
+  if(i>=c.drills.length){auto=false;syncAuto();return}
+  if(c.key!==current)show(c.key,false);
+  playItem(drillItem(c,i),play);
+  const el=document.querySelectorAll("details.drill")[i];if(el&&play&&auto){el.scrollIntoView({block:"nearest",behavior:"smooth"})}
+}
+function renderNP(){
+  const it=nowItem||drillItem(course(),0),v=V[it.k],c=C.find(x=>x.key===it.course);
+  const d=it.di!=null&&c?c.drills[it.di]:null;
+  const range=it.e?`${fmt(it.t)}–${fmt(it.e)} · ${mins(it.e-it.t)}`:`from ${fmt(it.t)} · full video`;
+  let h=`<div class="tag">${nowItem?"Now playing":"Ready"}${c?` · ${esc(c.name)}`:""}${d?` · drill ${it.di+1} of ${c.drills.length}`:""}</div><h3>${esc(it.name)}</h3><div class="meta">${esc(v.who)} · ${esc(v.title)} · ${range}</div>`;
+  if(d)h+=`<div class="npdose"><b>${LV[level][0]}</b>${esc(d.lv[level])}</div>`;
+  document.getElementById("np").innerHTML=h;
+  document.getElementById("ytOut").innerHTML=`<a href="${url(it.k,it.t)}" target="_blank" rel="noopener">Open on YouTube</a>`;
+}
+function markPlaying(){
+  document.querySelectorAll("details.drill").forEach((el,i)=>el.classList.toggle("playing",!!nowItem&&nowItem.course===current&&nowItem.di===i));
+}
+function syncAuto(){const b=document.getElementById("playCourse");b.setAttribute("aria-pressed",auto);b.textContent=auto?"❚❚ Stop course mode":"▶ Play whole course";b.classList.toggle("primary",!auto)}
+document.getElementById("prev").onclick=()=>step(-1,true);
+document.getElementById("next").onclick=()=>step(1,true);
+document.getElementById("playCourse").onclick=()=>{
+  auto=!auto;syncAuto();
+  if(auto){const keep=nowItem&&nowItem.di!=null&&nowItem.course===current;playItem(keep?nowItem:drillItem(course(),0),true)}
+};
+
+// ---- Course rendering ----
+const chips=document.getElementById("chips");
+C.forEach(c=>{const b=document.createElement("button");b.className="chip";b.textContent=c.name;b.setAttribute("role","tab");b.dataset.k=c.key;b.onclick=()=>show(c.key,true);chips.appendChild(b)});
+document.querySelectorAll("#seg button").forEach(b=>b.onclick=()=>{level=b.dataset.l;try{localStorage.setItem("psa-level",level)}catch(e){}
+  const open=[...document.querySelectorAll("details.drill")].map(x=>x.open);
+  show(current,false);
+  document.querySelectorAll("details.drill").forEach((x,i)=>{if(open[i])x.open=true});
+  renderNP();
+});
+function setLevel(){document.querySelectorAll("#seg button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.l===level));document.querySelectorAll(".lv").forEach(el=>el.classList.toggle("on",el.dataset.l===level))}
+
+function show(k,scroll){
+  const c=C.find(x=>x.key===k)||C[0];
+  current=c.key;items=[];
+  const add=it=>{items.push(it);return items.length-1};
+  chips.querySelectorAll(".chip").forEach(b=>b.setAttribute("aria-selected",b.dataset.k===c.key));
+  const f=c.feature,fv=V[f.v];
+  let h=`<div class="course-head"><h2>${esc(c.name)}</h2><p class="why">${esc(c.why)}</p><div class="leads"><b>Built from:</b> ${esc(c.leads)}</div></div>`;
+  h+=`<div class="lvnote"><b>${LV[level][0]} level</b><span>${esc(LV[level][1])} The sets and reps on every drill below are set for this level.</span></div>`;
+  h+=`<h4 class="sec" style="margin-top:0">Drills <small>${c.drills.length} drills · tap ▶ to play, tap the name for details</small></h4><div class="drills">`;
+  c.drills.forEach((d,i)=>{const v=V[d.v],e=segEnd(d.v,d.t);
+    const ix=add({k:d.v,t:d.t,e,name:d.n,course:c.key,di:i});
+    const range=e?`${fmt(d.t)}–${fmt(e)}`:`from ${fmt(d.t)}`;
+    h+=`<details class="drill"><summary><span class="dname">${esc(d.n)}</span><span class="dsrc">${esc(v.who)} · ${esc(v.title)}</span><span class="ddose"><b>${LV[level][0]}</b>${esc(d.lv[level])}</span><button type="button" class="dtime" data-i="${ix}" aria-label="Play ${esc(d.n)}">${range}${e?`<small>${mins(e-d.t)}</small>`:""}</button></summary><div class="dbody"><p>${esc(d.d)}</p><div class="links"><button type="button" class="btn" data-i="${ix}">▶ Play drill <span class="clock">${range}</span></button>`;
+    (d.also||[]).forEach(([k2,t2])=>{const e2=segEnd(k2,t2);const j=add({k:k2,t:t2,e:e2,name:`${d.n} · ${k2===d.v?"part 2":V[k2].who}`,course:c.key});h+=`<button type="button" class="btn ghost" data-i="${j}">${esc(k2===d.v?"Also":V[k2].who)} <span class="clock">${fmt(t2)}${e2?`–${fmt(e2)}`:""}</span></button>`});
+    h+=`</div><div class="cols"><div><h5>Coaching cues</h5><ul>${d.c.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div><div><h5>Common mistakes</h5><ul class="bad">${d.m.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div></div><div><div class="dose" role="group" aria-label="Dose by level">`+[["b","Beginner"],["i","Intermediate"],["p","Pro"]].map(([l,n])=>`<div class="lv" data-l="${l}"><b>${n}</b>${esc(d.lv[l])}</div>`).join("")+`</div></div></div></details>`;
+  });
+  h+=`</div>`;
+  const fi=add({k:f.v,t:0,e:null,name:`Full session: ${fv.title}`,course:c.key});
+  h+=`<h4 class="sec">Full session</h4><div class="feature"><div class="tag">Full session · ${esc(fv.len)}</div><h3>${esc(fv.title)}</h3><div class="meta">${esc(fv.who)} · ${esc(fv.src)}</div><p>${esc(f.note)}</p><button type="button" class="btn" data-i="${fi}">▶ Play the full session</button>`;
+  if(f.ch&&f.ch.length){h+=`<ul class="chapters">`+f.ch.map(([t,n],j)=>{const nx=f.ch[j+1]?f.ch[j+1][0]:segEnd(f.v,t);const ci=add({k:f.v,t,e:nx||null,name:n,course:c.key});return `<li><button type="button" data-i="${ci}"><span>${fmt(t)}</span><span>${esc(n)}</span></button></li>`}).join("")+`</ul>`}
+  h+=`</div>`;
+  h+=`<h4 class="sec">Session plan <small>60 minutes</small></h4><div class="tablewrap"><table class="plan"><tbody>${c.plan.map(([t,b])=>`<tr><td>${t} min</td><td>${esc(b)}</td></tr>`).join("")}</tbody></table></div>`;
+  if(c.more&&c.more.length){h+=`<h4 class="sec">More full workouts</h4><ul class="more">`+c.more.map(m=>{const k2=m[0],t2=typeof m[1]==="number"?m[1]:0,note=typeof m[1]==="number"?m[2]:m[1];const mi=add({k:k2,t:t2,e:null,name:V[k2].title,course:c.key});return `<li><button type="button" class="linkbtn" data-i="${mi}">▶ ${esc(V[k2].title)}</button><span>${esc(V[k2].len)} · ${esc(note)}</span></li>`}).join("")+`</ul>`}
+  const root=document.getElementById("course");
+  root.innerHTML=h;
+  setLevel();markPlaying();
+  try{history.replaceState(null,"","#"+c.key)}catch(e){}
+  if(scroll){(window.innerWidth<960?root:document.querySelector(".side")).scrollIntoView({behavior:"smooth",block:"start"})}
+  if(!nowItem){renderNP();if(ready)load(drillItem(c,0),false)}
+}
+document.getElementById("course").addEventListener("click",e=>{
+  const b=e.target.closest("[data-i]");if(!b)return;
+  e.preventDefault();
+  const it=items[+b.dataset.i];if(!it)return;
+  if(it.di==null&&auto){auto=false;syncAuto()}
+  playItem(it,true);
+  if(window.innerWidth<960)document.querySelector(".stage").scrollIntoView({block:"nearest"});
+});
+
+document.getElementById("nDrills").textContent=C.reduce((a,c)=>a+c.drills.length,0);
+document.getElementById("nVideos").textContent=Object.keys(V).length;
+document.getElementById("trainerGrid").innerHTML=T.map(([n,r,d])=>`<div class="trainer"><h3>${esc(n)}</h3><div class="role">${esc(r)}</div><p>${esc(d)}</p></div>`).join("");
+document.getElementById("weekGrid").innerHTML=W.map(([d,t])=>`<div class="day"><b>${d}</b>${esc(t)}</div>`).join("");
+const start=(location.hash||"").slice(1);
+show(C.some(c=>c.key===start)?start:"shooting",false);
+syncAuto();
+</script>
+</body>
+</html>
